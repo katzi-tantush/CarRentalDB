@@ -4,14 +4,16 @@ using CarRentalDB.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CarRentalDB.Migrations
 {
     [DbContext(typeof(CarRentalDbContext))]
-    partial class CarRentalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210215092526_Locations_table")]
+    partial class Locations_table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,9 +61,6 @@ namespace CarRentalDB.Migrations
                     b.Property<int?>("CarCategoryID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ImageID")
-                        .HasColumnType("int");
-
                     b.Property<int>("KillometerCount")
                         .HasColumnType("int");
 
@@ -76,8 +75,6 @@ namespace CarRentalDB.Migrations
                     b.HasIndex("BranchID");
 
                     b.HasIndex("CarCategoryID");
-
-                    b.HasIndex("ImageID");
 
                     b.ToTable("Cars");
                 });
@@ -110,21 +107,6 @@ namespace CarRentalDB.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("CarCategories");
-                });
-
-            modelBuilder.Entity("CarRentalDB.Models.Image", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<byte[]>("File")
-                        .HasColumnType("varbinary(max)");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("CarRentalDB.Models.Location", b =>
@@ -164,15 +146,9 @@ namespace CarRentalDB.Migrations
                         .WithMany()
                         .HasForeignKey("CarCategoryID");
 
-                    b.HasOne("CarRentalDB.Models.Image", "Image")
-                        .WithMany()
-                        .HasForeignKey("ImageID");
-
                     b.Navigation("Branch");
 
                     b.Navigation("CarCategory");
-
-                    b.Navigation("Image");
                 });
 #pragma warning restore 612, 618
         }

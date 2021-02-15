@@ -21,6 +21,8 @@ namespace CarRentalDB.Models
         public virtual DbSet<CarCategory> CarCategories { get; set; }
         public virtual DbSet<Car> Cars { get; set; }
         public virtual DbSet<Branch> Branches { get; set; }
+        public virtual DbSet<Location> Locations{ get; set; }
+        public virtual DbSet<Image> Images{ get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
