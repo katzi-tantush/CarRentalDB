@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CarRentalDB.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -6,10 +7,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CarRentalDB.Models
 {
-    public partial class CarCategory
+    public partial class CarCategory : IDataModel
     {
         [Key]
         public int ID { get; set; }
+        public string Manufacturer { get; set; }
         public string Model { get; set; }
         public bool Automatic { get; set; }
     }

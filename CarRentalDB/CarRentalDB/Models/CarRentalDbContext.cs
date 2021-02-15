@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
 
 #nullable disable
 
@@ -23,7 +24,12 @@ namespace CarRentalDB.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Data Source=DESKTOP-ERBRHMC\\SQLEXPRESS;Initial Catalog=CarRentalDb;Integrated Security=True");
+                IConfigurationRoot configuration = new ConfigurationBuilder()
+                    .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                    .AddJsonFile("appsettings.json")
+                    .Build();
+                //optionsBuilder.UseSqlServer("Data Source=DESKTOP-ERBRHMC\\SQLEXPRESS;Initial Catalog=CarRentalDb;Integrated Security=True");
+                optionsBuilder.UseSqlServer(configuration.GetConnectionString("CarRentalsConStr"));
             }
         }
 
