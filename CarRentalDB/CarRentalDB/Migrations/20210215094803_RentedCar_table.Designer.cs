@@ -4,14 +4,16 @@ using CarRentalDB.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CarRentalDB.Migrations
 {
     [DbContext(typeof(CarRentalDbContext))]
-    partial class CarRentalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210215094803_RentedCar_table")]
+    partial class RentedCar_table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,6 +65,9 @@ namespace CarRentalDB.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("KillometerCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LicensePlateNumber")
                         .HasColumnType("int");
 
                     b.Property<bool>("RentReady")
@@ -158,46 +163,9 @@ namespace CarRentalDB.Migrations
                     b.Property<DateTime>("ContractStartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UserID")
-                        .HasColumnType("int");
-
                     b.HasKey("CarID");
 
-                    b.HasIndex("UserID");
-
                     b.ToTable("RentedCars");
-                });
-
-            modelBuilder.Entity("CarRentalDB.Models.User", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("BirthDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("FName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ImageID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("LName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Password")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("ImageID");
-
-                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("CarRentalDB.Models.Branch", b =>
@@ -226,24 +194,6 @@ namespace CarRentalDB.Migrations
                     b.Navigation("Branch");
 
                     b.Navigation("CarCategory");
-
-                    b.Navigation("Image");
-                });
-
-            modelBuilder.Entity("CarRentalDB.Models.RentedCar", b =>
-                {
-                    b.HasOne("CarRentalDB.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserID");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("CarRentalDB.Models.User", b =>
-                {
-                    b.HasOne("CarRentalDB.Models.Image", "Image")
-                        .WithMany()
-                        .HasForeignKey("ImageID");
 
                     b.Navigation("Image");
                 });

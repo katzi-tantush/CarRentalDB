@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace CarRentalDB.Models
 {
-    public class Car : IDataModel
+    public class User : IDataModel
     {
         [Key]
         public int ID { get; set; }
-        public CarCategory CarCategory { get; set; }
-        public int KillometerCount { get; set; }
+        public string FName { get; set; }
+        public string LName { get; set; }
+        public string UserName { get; set; }
+        public int Password { get; set; }
+        public DateTime BirthDate { get; set; }
         public Image Image { get; set; }
-        public bool RentReady { get; set; }
-        public bool AvailableForRent { get; set; }
-        public Branch Branch { get; set; }
     }
 }

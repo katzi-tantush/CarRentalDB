@@ -9,6 +9,7 @@ namespace CarRentalDB.Models
 {
     public class Image: IDataModel
     {
+        // TODO: implement the image db
         [Key]
         public int ID { get; set; }
         public byte[] File { get; set; }

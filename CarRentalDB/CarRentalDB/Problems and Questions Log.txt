@@ -1,0 +1,3 @@
+﻿- RentedCar has a CarID field. this is meant to be both the ID and a foregin key in Cars -> how do I make this so in the db?
+at the moment its represented just fine
+- Is it Ok that CarID is the primary key and not the car number? 

@@ -23,6 +23,8 @@ namespace CarRentalDB.Models
         public virtual DbSet<Branch> Branches { get; set; }
         public virtual DbSet<Location> Locations{ get; set; }
         public virtual DbSet<Image> Images{ get; set; }
+        public virtual DbSet<RentedCar> RentedCars{ get; set; }
+        public virtual DbSet<User> Users{ get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -4,14 +4,16 @@ using CarRentalDB.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CarRentalDB.Migrations
 {
     [DbContext(typeof(CarRentalDbContext))]
-    partial class CarRentalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210215104616_User_table")]
+    partial class User_table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,6 +65,9 @@ namespace CarRentalDB.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("KillometerCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LicensePlateNumber")
                         .HasColumnType("int");
 
                     b.Property<bool>("RentReady")
@@ -197,7 +202,7 @@ namespace CarRentalDB.Migrations
 
                     b.HasIndex("ImageID");
 
-                    b.ToTable("Users");
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("CarRentalDB.Models.Branch", b =>
