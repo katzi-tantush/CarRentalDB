@@ -14,5 +14,8 @@ namespace CarRentalDB.Models
         public string Manufacturer { get; set; }
         public string Model { get; set; }
         public bool Automatic { get; set; }
+        public DateTime ProductionDate { get; set; }
+        public int DailyCost { get; set; }
+        public int OverdueDailyCost { get; set; }
     }
 }

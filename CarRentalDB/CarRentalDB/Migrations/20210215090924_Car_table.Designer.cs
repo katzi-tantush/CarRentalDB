@@ -4,14 +4,16 @@ using CarRentalDB.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CarRentalDB.Migrations
 {
     [DbContext(typeof(CarRentalDbContext))]
-    partial class CarRentalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210215090924_Car_table")]
+    partial class Car_table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -19,24 +21,6 @@ namespace CarRentalDB.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.3")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("CarRentalDB.Models.Branch", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Branches");
-                });
 
             modelBuilder.Entity("CarRentalDB.Models.Car", b =>
                 {
@@ -47,9 +31,6 @@ namespace CarRentalDB.Migrations
 
                     b.Property<bool>("AvailableForRent")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("BranchID")
-                        .HasColumnType("int");
 
                     b.Property<int?>("CarTypeID")
                         .HasColumnType("int");
@@ -64,8 +45,6 @@ namespace CarRentalDB.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("BranchID");
 
                     b.HasIndex("CarTypeID");
 
@@ -104,15 +83,9 @@ namespace CarRentalDB.Migrations
 
             modelBuilder.Entity("CarRentalDB.Models.Car", b =>
                 {
-                    b.HasOne("CarRentalDB.Models.Branch", "Branch")
-                        .WithMany()
-                        .HasForeignKey("BranchID");
-
                     b.HasOne("CarRentalDB.Models.CarCategory", "CarType")
                         .WithMany()
                         .HasForeignKey("CarTypeID");
-
-                    b.Navigation("Branch");
 
                     b.Navigation("CarType");
                 });
