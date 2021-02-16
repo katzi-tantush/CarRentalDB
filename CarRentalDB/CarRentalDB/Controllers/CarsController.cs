@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CarRentalDB.Models;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,28 +9,51 @@ using System.Threading.Tasks;
 
 namespace CarRentalDB.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class CarsController : ControllerBase
     {
+        CarRentalDbContext RentalsDb;
+
+        public CarsController()
+        {
+            RentalsDb = new CarRentalDbContext();
+        }
         // GET: api/<CarsController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(RentalsDb.Cars);
         }
 
         // GET api/<CarsController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult Get(int id)
         {
-            return "value";
+            var car = RentalsDb.Cars.FirstOrDefault(c => c.ID == id);
+
+            if (car != null)
+            {
+                return Ok(car);
+            }
+            return NotFound();
         }
 
         // POST api/<CarsController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromBody] Car value)
         {
+            try
+            {
+                RentalsDb.Cars.Add(value);
+                RentalsDb.SaveChanges();
+
+                return Ok(value);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
         }
 
         // PUT api/<CarsController>/5
@@ -40,8 +64,14 @@ namespace CarRentalDB.Controllers
 
         // DELETE api/<CarsController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            var carToDelete = RentalsDb.Cars.FirstOrDefault(c => c.ID == id);
+            if (carToDelete != null)
+            {
+                return Ok(carToDelete);
+            }
+            return NotFound();
         }
     }
 }
