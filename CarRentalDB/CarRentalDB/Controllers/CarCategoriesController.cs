@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 
 namespace CarRentalDB.Controllers
 {
+    // TODO: use authentication for this
+
     [Route("[controller]")]
     [ApiController]
     public class CarCategoriesController : ControllerBase
@@ -42,15 +44,6 @@ namespace CarRentalDB.Controllers
             {
                 var category = value;
                 value.ID = Utils.IDGen(RentalDB.CarCategories);
-                //{
-                //    ID = Utils.IDGen(RentalDB.CarCategories),
-                //    Automatic = value.Automatic,
-                //    Manufacturer = value.Manufacturer,
-                //    Model = value.Model,
-                //    DailyCost = value.DailyCost,
-                //    OverdueDailyCost = value.OverdueDailyCost,
-                //    ProductionDate = DateTime.Parse(value.ProductionDate.ToString())
-                //};
                 RentalDB.CarCategories.Add(category);
                 RentalDB.SaveChanges();
                 return Ok(category);
@@ -76,6 +69,8 @@ namespace CarRentalDB.Controllers
             {
                 return NotFound();
             }
+            RentalDB.CarCategories.Remove(carCategory);
+            RentalDB.SaveChanges();
             return Ok(carCategory);
         }
     }

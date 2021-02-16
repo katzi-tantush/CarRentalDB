@@ -61,3 +61,4 @@ D:\learning to code\jhon bryce\jb car rental project\backend\CarRentalDB\CarRent
 D:\learning to code\jhon bryce\jb car rental project\backend\CarRentalDB\CarRentalDB\obj\Debug\netcoreapp3.1\CarRentalDB.dll
 D:\learning to code\jhon bryce\jb car rental project\backend\CarRentalDB\CarRentalDB\obj\Debug\netcoreapp3.1\CarRentalDB.pdb
 D:\learning to code\jhon bryce\jb car rental project\backend\CarRentalDB\CarRentalDB\obj\Debug\netcoreapp3.1\CarRentalDB.genruntimeconfig.cache
+D:\learning to code\jhon bryce\jb car rental project\backend\CarRentalDB\CarRentalDB\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Authentication.JwtBearer.dll
