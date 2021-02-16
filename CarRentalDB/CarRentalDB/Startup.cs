@@ -53,14 +53,23 @@ namespace CarRentalDB
             // Authorization
             services.AddAuthorization(config =>
             {
-                config.AddPolicy("OverAllDataAdministration", new AuthorizationPolicyBuilder()
+                // admin authorization
+                config.AddPolicy("ManagerPolicy", new AuthorizationPolicyBuilder()
                     .RequireAuthenticatedUser()
-                    .RequireRole("AdminManager")
+                    .RequireRole("Manager")
                     .Build());
 
-                config.AddPolicy("StoreManagement", new AuthorizationPolicyBuilder()
+                // employee authorization
+                config.AddPolicy("EmployeePolicy", new AuthorizationPolicyBuilder()
                     .RequireAuthenticatedUser()
-                    .RequireRole("AdminEmployee")
+                    .RequireRole("Employee")
+                    .Build());
+
+                // TODO: is this needed?
+                // user authorization
+                config.AddPolicy("UserPolicy", new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .RequireRole("User")
                     .Build());
             });
         }
@@ -74,6 +83,10 @@ namespace CarRentalDB
             }
 
             app.UseRouting();
+
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
