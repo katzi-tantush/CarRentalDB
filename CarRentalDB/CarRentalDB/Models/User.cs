@@ -15,8 +15,9 @@ namespace CarRentalDB.Models
         public string FName { get; set; }
         public string LName { get; set; }
         public string UserName { get; set; }
-        public int Password { get; set; }
+        public string Password { get; set; }
         public DateTime BirthDate { get; set; }
-        public Image Image { get; set; }
+
+        public int ImageID { get; set; }
     }
 }

@@ -11,11 +11,12 @@ namespace CarRentalDB.Models
     {
         [Key]
         public int ID { get; set; }
-        public CarCategory CarCategory { get; set; }
         public int KillometerCount { get; set; }
-        public Image Image { get; set; }
         public bool RentReady { get; set; }
         public bool AvailableForRent { get; set; }
-        public Branch Branch { get; set; }
+
+        public int CarCategoryID { get; set; }
+        public int ImageID { get; set; }
+        public int BranchID { get; set; }
     }
 }

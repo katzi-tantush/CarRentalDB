@@ -4,14 +4,16 @@ using CarRentalDB.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CarRentalDB.Migrations
 {
     [DbContext(typeof(CarRentalDbContext))]
-    partial class CarRentalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210217101954_simpleCrudWithForeignKey_BranchLocationID_colomn")]
+    partial class simpleCrudWithForeignKey_BranchLocationID_colomn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -150,10 +152,12 @@ namespace CarRentalDB.Migrations
                     b.Property<DateTime>("ContractStartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserID")
+                    b.Property<int?>("UserID")
                         .HasColumnType("int");
 
                     b.HasKey("CarID");
+
+                    b.HasIndex("UserID");
 
                     b.ToTable("RentedCars");
                 });
@@ -171,14 +175,14 @@ namespace CarRentalDB.Migrations
                     b.Property<string>("FName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ImageID")
+                    b.Property<int?>("ImageID")
                         .HasColumnType("int");
 
                     b.Property<string>("LName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Password")
+                        .HasColumnType("int");
 
                     b.Property<string>("Role")
                         .HasColumnType("nvarchar(max)");
@@ -188,7 +192,27 @@ namespace CarRentalDB.Migrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("ImageID");
+
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("CarRentalDB.Models.RentedCar", b =>
+                {
+                    b.HasOne("CarRentalDB.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserID");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CarRentalDB.Models.User", b =>
+                {
+                    b.HasOne("CarRentalDB.Models.Image", "Image")
+                        .WithMany()
+                        .HasForeignKey("ImageID");
+
+                    b.Navigation("Image");
                 });
 #pragma warning restore 612, 618
         }

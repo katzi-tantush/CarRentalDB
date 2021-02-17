@@ -16,6 +16,7 @@ namespace CarRentalDB.Models
         public DateTime ContractStartDate { get; set; }
         public DateTime ContractEndDate { get; set; }
         public DateTime CarReturnDate { get; set; }
-        public User User { get; set; }
+
+        public int UserID { get; set; }
     }
 }

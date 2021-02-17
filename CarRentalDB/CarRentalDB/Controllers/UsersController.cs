@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CarRentalDB.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,28 +10,60 @@ using System.Threading.Tasks;
 
 namespace CarRentalDB.Controllers
 {
-    [Route("api/[controller]")]
+    // TODO: only users and admins can delete users and get user data
+    [Route("[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
     {
+        CarRentalDbContext RentalsDb;
+
+        public UsersController()
+        {
+            RentalsDb = new CarRentalDbContext();
+        }
         // GET: api/<UsersController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(RentalsDb.Users);
         }
 
         // GET api/<UsersController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult Get(int id)
         {
-            return "value";
+            var user = RentalsDb.Users.Find(id);
+
+            if (user != null)
+            {
+                return Ok(user);
+            }
+
+            return NotFound();
         }
 
         // POST api/<UsersController>
+        // TODO: implement id check attribute in user model
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromBody] User newUser)
         {
+            RentalsDb.Database.OpenConnection();
+            try
+            {
+                RentalsDb.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Users ON");
+                RentalsDb.Users.Add(newUser);
+                RentalsDb.SaveChanges();
+                RentalsDb.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Users OFF");
+                return Ok(newUser);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+            finally
+            {
+                RentalsDb.Database.CloseConnection();
+            }
         }
 
         // PUT api/<UsersController>/5
@@ -40,8 +74,19 @@ namespace CarRentalDB.Controllers
 
         // DELETE api/<UsersController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            var user = RentalsDb.Users.FirstOrDefault(u => u.ID == id);
+
+            if (user != null)
+            {
+                RentalsDb.Users.Remove(user);
+                RentalsDb.SaveChanges();
+
+                return Ok(user);
+            }
+
+            return NotFound();
         }
     }
 }
