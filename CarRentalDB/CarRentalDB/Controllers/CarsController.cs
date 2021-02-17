@@ -39,6 +39,7 @@ namespace CarRentalDB.Controllers
             return NotFound();
         }
 
+        // FIXME: car categories is not an int! cant parse the incoming object from the post
         // POST api/<CarsController>
         [HttpPost]
         public IActionResult Post([FromBody] Car value)
