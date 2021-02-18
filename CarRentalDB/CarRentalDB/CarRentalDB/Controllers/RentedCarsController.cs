@@ -12,8 +12,6 @@ namespace CarRentalDB.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Employee")]
-    [Authorize(Roles = "Manager")]
     public class RentedCarsController : ControllerBase
     {
         CarRentalDbContext RentalsDb;
@@ -28,39 +26,83 @@ namespace CarRentalDB.Controllers
         [HttpGet]
         [Authorize(Roles = "Employee")]
         [Authorize(Roles = "Manager")]
-        public IEnumerable<string> Get()
+        public IActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(RentalsDb.RentedCars);
         }
 
         // GET api/<RentalCarsController>/5
         [HttpGet("{id}")]
         [Authorize(Roles = "Employee")]
         [Authorize(Roles = "Manager")]
-        public string Get(int id)
+        public IActionResult Get(int id)
         {
-            return "value";
+            IActionResult response = NotFound();
+
+            RentedCar rentedCar = RentalsDb.RentedCars.FirstOrDefault(c => c.CarID == id);
+
+            if (rentedCar != null)
+            {
+                response = Ok(rentedCar);
+            }
+
+            return response;
         }
 
         // POST api/<RentalCarsController>
         [HttpPost]
         [Authorize(Roles = "Manager")]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromBody] RentedCar newRentedCar)
         {
+            try
+            {
+                RentalsDb.RentedCars.Add(newRentedCar);
+                RentalsDb.SaveChanges();
+                return Ok(newRentedCar);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
         }
 
         // PUT api/<RentalCarsController>/5
         [HttpPut("{id}")]
         [Authorize(Roles = "Manager")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult Put([FromBody] RentedCar updatedRentedCar)
         {
+            IActionResult response = NotFound();
+
+            var existingCar = RentalsDb.RentedCars.FirstOrDefault(c => c.CarID == updatedRentedCar.CarID);
+
+            if (existingCar != null)
+            {
+                RentalsDb.Entry(existingCar).CurrentValues.SetValues(updatedRentedCar);
+                RentalsDb.SaveChanges();
+                response = Ok(existingCar);
+            }
+
+            return response;
         }
 
         // DELETE api/<RentalCarsController>/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Employee")]
         [Authorize(Roles = "Manager")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            IActionResult response = NotFound();
+
+            var carToRemove = RentalsDb.RentedCars.FirstOrDefault(c => c.CarID == id);
+
+            if (carToRemove != null)
+            {
+                RentalsDb.RentedCars.Remove(carToRemove);
+                RentalsDb.SaveChanges();
+                response = Ok(carToRemove);
+            }
+
+            return response;
         }
     }
 }
