@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\learning to code\\jhon bryce\\jb car rental project\\backend\\CarRentalDB-simpleCrud\\CarRentalDB\\CarRentalDB\\CarRentalDB.csproj": {}
+    "D:\\learning to code\\jhon bryce\\jb car rental project\\backend\\CarRentalDB\\CarRentalDB\\CarRentalDB\\CarRentalDB.csproj": {}
   },
   "projects": {
-    "D:\\learning to code\\jhon bryce\\jb car rental project\\backend\\CarRentalDB-simpleCrud\\CarRentalDB\\CarRentalDB\\CarRentalDB.csproj": {
+    "D:\\learning to code\\jhon bryce\\jb car rental project\\backend\\CarRentalDB\\CarRentalDB\\CarRentalDB\\CarRentalDB.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\learning to code\\jhon bryce\\jb car rental project\\backend\\CarRentalDB-simpleCrud\\CarRentalDB\\CarRentalDB\\CarRentalDB.csproj",
+        "projectUniqueName": "D:\\learning to code\\jhon bryce\\jb car rental project\\backend\\CarRentalDB\\CarRentalDB\\CarRentalDB\\CarRentalDB.csproj",
         "projectName": "CarRentalDB",
-        "projectPath": "D:\\learning to code\\jhon bryce\\jb car rental project\\backend\\CarRentalDB-simpleCrud\\CarRentalDB\\CarRentalDB\\CarRentalDB.csproj",
+        "projectPath": "D:\\learning to code\\jhon bryce\\jb car rental project\\backend\\CarRentalDB\\CarRentalDB\\CarRentalDB\\CarRentalDB.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\learning to code\\jhon bryce\\jb car rental project\\backend\\CarRentalDB-simpleCrud\\CarRentalDB\\CarRentalDB\\obj\\",
+        "outputPath": "D:\\learning to code\\jhon bryce\\jb car rental project\\backend\\CarRentalDB\\CarRentalDB\\CarRentalDB\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",

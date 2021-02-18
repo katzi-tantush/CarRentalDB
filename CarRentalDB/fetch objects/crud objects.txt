@@ -1,0 +1,26 @@
+
+manager:
+
+{
+    "ID":1,
+    "Role":"Manager",
+    "FName":"jim",
+    "LName":"geofries",
+    "UserName":"gjPiggy",
+    "Password":"lknassdf229",
+    "BirthDate": "2012-04-21T18:25:43-05:00",
+    "ImageID": 0
+}
+
+
+carCategory:
+
+{
+    "ID":1,
+    "Manufacturer":"Opel",
+    "Model":"Astra",
+    "Automatic":"true",
+    "ProductionDate":"2012-04-23T18:25:43.511Z",
+    "DailyCost":11,
+    "OverdueDailyCost":12    
+}

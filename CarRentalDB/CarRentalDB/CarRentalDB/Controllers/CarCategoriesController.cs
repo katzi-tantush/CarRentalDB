@@ -23,7 +23,7 @@ namespace CarRentalDB.Controllers
         [Authorize(Policy = "ManagerPolicy")]
         public IActionResult Get()
         {
-            return Ok(RentalDB.CarCategories);
+                return Ok(RentalDB.CarCategories);
         }
 
         // GET api/<CarCategoriesController>/5
@@ -40,7 +40,7 @@ namespace CarRentalDB.Controllers
 
         // POST api/<CarCategoriesController>
         [HttpPost]
-        [Authorize(Policy="ManagerPolicy")]
+        //[Authorize(Roles = "Manager")]
         public IActionResult Post([FromBody] CarCategory value)
         {
             try
