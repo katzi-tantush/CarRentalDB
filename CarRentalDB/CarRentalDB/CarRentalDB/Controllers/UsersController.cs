@@ -50,24 +50,12 @@ namespace CarRentalDB.Controllers
         }
 
         // gets a username and password, returns the full user data if a matching user is found
-        [HttpGet("registered")]
+        [HttpGet("registereduser")]
         public IActionResult GetByUsernamePassword([FromBody] User registeredUser )
         {
             IActionResult response = NotFound();
-            User userMatch;
 
-            //IEnumerable<User> matchingUsernames = RentalsDb.Users.Where(u => u.UserName == registeredUser.UserName);
-
-            //foreach (User user in matchingUsernames)
-            //{
-            //    if (user.Password == registeredUser.Password)
-            //    {
-            //        userMatch = user;
-            //        response = Ok(user);
-            //        break;
-            //    }
-            //}
-            userMatch = RentalsDb.Users
+            User userMatch = RentalsDb.Users
                 .Where(u => u.UserName == registeredUser.UserName)
                 .FirstOrDefault(u => u.Password == registeredUser.Password);
 
@@ -81,9 +69,17 @@ namespace CarRentalDB.Controllers
 
         // POST api/<UsersController>
         // TODO: implement id check attribute in user model
+        // gets a new user, if the username does not exist in the db, adds the user to db
         [HttpPost]
         public IActionResult Post([FromBody] User newUser)
         {
+            User existingUsername = RentalsDb.Users.FirstOrDefault(u => u.UserName == newUser.UserName);
+
+            if (existingUsername != null)
+            {
+                return BadRequest("this username allready exists in our database");
+            }
+
             RentalsDb.Database.OpenConnection();
             try
             {
@@ -122,7 +118,6 @@ namespace CarRentalDB.Controllers
 
                 var claims = new Claim[]
                     {
-                        // FIXME: whats this 'abc'?
                         new Claim(JwtRegisteredClaimNames.Sub, "clientClaims"),
                         new Claim(ClaimTypes.Name, existingUser.UserName),
                         new Claim(ClaimTypes.Role, existingUser.Role),
@@ -146,9 +141,21 @@ namespace CarRentalDB.Controllers
         }
 
         // PUT api/<UsersController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut()]
+        public IActionResult Put([FromBody] User changedUser)
         {
+            IActionResult response = NotFound();
+
+            User existingUser = RentalsDb.Users.FirstOrDefault(u => u.ID == changedUser.ID);
+
+            if (existingUser != null)
+            {
+                RentalsDb.Entry(existingUser).CurrentValues.SetValues(changedUser);
+                RentalsDb.SaveChanges();
+                response = Ok(changedUser);
+            }
+
+            return response;
         }
 
         // DELETE api/<UsersController>/5

@@ -1,2 +1,5 @@
 ﻿- get authorization in carcategories to work [V]
 - catch unauthorized in all controllers
+- implement the images
+- add attribute validation to user id and car id 
+- look for other places that need model validation
