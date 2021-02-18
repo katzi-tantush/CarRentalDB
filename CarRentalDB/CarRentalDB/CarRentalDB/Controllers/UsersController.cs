@@ -56,16 +56,24 @@ namespace CarRentalDB.Controllers
             IActionResult response = NotFound();
             User userMatch;
 
-            IEnumerable<User> matchingUsernames = RentalsDb.Users.Where(u => u.UserName == registeredUser.UserName);
+            //IEnumerable<User> matchingUsernames = RentalsDb.Users.Where(u => u.UserName == registeredUser.UserName);
 
-            foreach (User user in matchingUsernames)
+            //foreach (User user in matchingUsernames)
+            //{
+            //    if (user.Password == registeredUser.Password)
+            //    {
+            //        userMatch = user;
+            //        response = Ok(user);
+            //        break;
+            //    }
+            //}
+            userMatch = RentalsDb.Users
+                .Where(u => u.UserName == registeredUser.UserName)
+                .FirstOrDefault(u => u.Password == registeredUser.Password);
+
+            if (userMatch != null)
             {
-                if (user.Password == registeredUser.Password)
-                {
-                    userMatch = user;
-                    response = Ok(user);
-                    break;
-                }
+                response = Ok(userMatch);
             }
 
             return response;
