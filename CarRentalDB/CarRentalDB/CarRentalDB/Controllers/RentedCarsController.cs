@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CarRentalDB.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +12,22 @@ namespace CarRentalDB.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Employee")]
+    [Authorize(Roles = "Manager")]
     public class RentedCarsController : ControllerBase
     {
+        CarRentalDbContext RentalsDb;
+
+        public RentedCarsController()
+        {
+            RentalsDb = new CarRentalDbContext();
+        }
+
+
         // GET: api/<RentalCarsController>
         [HttpGet]
+        [Authorize(Roles = "Employee")]
+        [Authorize(Roles = "Manager")]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
@@ -21,6 +35,8 @@ namespace CarRentalDB.Controllers
 
         // GET api/<RentalCarsController>/5
         [HttpGet("{id}")]
+        [Authorize(Roles = "Employee")]
+        [Authorize(Roles = "Manager")]
         public string Get(int id)
         {
             return "value";
@@ -28,18 +44,21 @@ namespace CarRentalDB.Controllers
 
         // POST api/<RentalCarsController>
         [HttpPost]
+        [Authorize(Roles = "Manager")]
         public void Post([FromBody] string value)
         {
         }
 
         // PUT api/<RentalCarsController>/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "Manager")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
         // DELETE api/<RentalCarsController>/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Manager")]
         public void Delete(int id)
         {
         }

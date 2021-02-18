@@ -13,7 +13,7 @@ namespace CarRentalDB.Models
         public int ID { get; set; }
         public int KillometerCount { get; set; }
         public bool RentReady { get; set; }
-        public bool AvailableForRent { get; set; }
+        //public bool AvailableForRent { get; set; }
 
         public int CarCategoryID { get; set; }
         public int ImageID { get; set; }

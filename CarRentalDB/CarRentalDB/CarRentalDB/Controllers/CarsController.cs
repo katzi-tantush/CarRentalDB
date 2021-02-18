@@ -1,4 +1,5 @@
 ﻿using CarRentalDB.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,7 @@ namespace CarRentalDB.Controllers
         {
             RentalsDb = new CarRentalDbContext();
         }
+
         // GET: api/<CarsController>
         [HttpGet]
         public IActionResult Get()
@@ -42,6 +44,7 @@ namespace CarRentalDB.Controllers
         // FIXME: car categories is not an int! cant parse the incoming object from the post
         // POST api/<CarsController>
         [HttpPost]
+        [Authorize(Policy = "Manager")]
         public IActionResult Post([FromBody] Car value)
         {
             try
@@ -59,12 +62,14 @@ namespace CarRentalDB.Controllers
 
         // PUT api/<CarsController>/5
         [HttpPut("{id}")]
+        [Authorize(Policy = "Manager")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
         // DELETE api/<CarsController>/5
         [HttpDelete("{id}")]
+        [Authorize(Policy = "Manager")]
         public IActionResult Delete(int id)
         {
             var carToDelete = RentalsDb.Cars.FirstOrDefault(c => c.ID == id);

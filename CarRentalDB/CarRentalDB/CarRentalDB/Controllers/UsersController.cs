@@ -1,4 +1,5 @@
 ﻿using CarRentalDB.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -28,8 +29,11 @@ namespace CarRentalDB.Controllers
             RentalsDb = new CarRentalDbContext();
             Config = c;
         }
+
         // GET: api/<UsersController>
         [HttpGet]
+        [Authorize(Roles = "Employee")]
+        [Authorize(Roles = "Manager")]
         public IActionResult Get()
         {
             return Ok(RentalsDb.Users);
@@ -37,6 +41,8 @@ namespace CarRentalDB.Controllers
 
         // GET api/<UsersController>/5
         [HttpGet("{id}")]
+        [Authorize(Roles = "Employee")]
+        [Authorize(Roles = "Manager")]
         public IActionResult Get(int id)
         {
             var user = RentalsDb.Users.FirstOrDefault(u => u.ID == id);
@@ -67,10 +73,12 @@ namespace CarRentalDB.Controllers
             return response;
         }
 
-        // POST api/<UsersController>
         // TODO: implement id check attribute in user model
+        // POST api/<UsersController>
         // gets a new user, if the username does not exist in the db, adds the user to db
         [HttpPost]
+        [Authorize(Roles = "User")]
+        [Authorize(Roles = "Manager")]
         public IActionResult Post([FromBody] User newUser)
         {
             User existingUsername = RentalsDb.Users.FirstOrDefault(u => u.UserName == newUser.UserName);
@@ -141,7 +149,10 @@ namespace CarRentalDB.Controllers
         }
 
         // PUT api/<UsersController>/5
+        // get a user value and changing its corresponding user in the db to that user
         [HttpPut()]
+        [Authorize(Roles = "User")]
+        [Authorize(Roles = "Manager")]
         public IActionResult Put([FromBody] User changedUser)
         {
             IActionResult response = NotFound();
@@ -160,6 +171,8 @@ namespace CarRentalDB.Controllers
 
         // DELETE api/<UsersController>/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "User")]
+        [Authorize(Roles = "Manager")]
         public IActionResult Delete(int id)
         {
             var user = RentalsDb.Users.FirstOrDefault(u => u.ID == id);

@@ -20,7 +20,6 @@ namespace CarRentalDB.Controllers
         CarRentalDbContext RentalDB = new CarRentalDbContext();
         // GET: api/<CarCategoriesController>
         [HttpGet]
-        [Authorize(Policy = "ManagerPolicy")]
         public IActionResult Get()
         {
                 return Ok(RentalDB.CarCategories);
@@ -40,7 +39,7 @@ namespace CarRentalDB.Controllers
 
         // POST api/<CarCategoriesController>
         [HttpPost]
-        //[Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager")]
         public IActionResult Post([FromBody] CarCategory value)
         {
             try
@@ -59,12 +58,14 @@ namespace CarRentalDB.Controllers
 
         // PUT api/<CarCategoriesController>/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "Manager")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
         // DELETE api/<CarCategoriesController>/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Manager")]
         public IActionResult Delete(int id)
         {
             var carCategory = RentalDB.CarCategories.FirstOrDefault(category => category.ID == id);
