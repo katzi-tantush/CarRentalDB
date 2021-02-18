@@ -1,1 +1,2 @@
-﻿- get authorization in carcategories to work
+﻿- get authorization in carcategories to work [V]
+- catch unauthorized in all controllers
