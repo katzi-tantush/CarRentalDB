@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace CarRentalDB.Validators
 {
+    // validates that the incoming property is of the specified digit count
     public class DigitCount : ValidationAttribute
     {
         int digitCount { get; }

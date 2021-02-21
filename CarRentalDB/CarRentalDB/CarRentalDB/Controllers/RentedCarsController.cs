@@ -24,8 +24,7 @@ namespace CarRentalDB.Controllers
 
         // GET: api/<RentalCarsController>
         [HttpGet]
-        [Authorize(Roles = "Employee")]
-        [Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Employee, Manager")]
         public IActionResult Get()
         {
             return Ok(RentalsDb.RentedCars);
@@ -33,8 +32,7 @@ namespace CarRentalDB.Controllers
 
         // GET api/<RentalCarsController>/5
         [HttpGet("{id}")]
-        [Authorize(Roles = "Employee")]
-        [Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Employee, Manager")]
         public IActionResult Get(int id)
         {
             IActionResult response = NotFound();
@@ -87,8 +85,7 @@ namespace CarRentalDB.Controllers
 
         // DELETE api/<RentalCarsController>/5
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Employee")]
-        [Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Employee, Manager")]
         public IActionResult Delete(int id)
         {
             IActionResult response = NotFound();

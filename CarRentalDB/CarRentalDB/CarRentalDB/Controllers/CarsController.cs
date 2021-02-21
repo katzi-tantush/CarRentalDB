@@ -1,6 +1,7 @@
 ﻿using CarRentalDB.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,9 +31,9 @@ namespace CarRentalDB.Controllers
 
         // GET api/<CarsController>/5
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            var car = RentalsDb.Cars.FirstOrDefault(c => c.ID == id);
+            var car = await RentalsDb.Cars.FirstOrDefaultAsync(c => c.ID == id);
 
             if (car != null)
             {
@@ -44,12 +45,38 @@ namespace CarRentalDB.Controllers
         // POST api/<CarsController>
         [HttpPost]
         [Authorize(Roles = "Manager")]
-        public IActionResult Post([FromBody] Car value)
+        //public IActionResult Post([FromBody] Car value)
+        //{
+        //    RentalsDb.Database.OpenConnection();
+        //    try
+        //    {
+        //        RentalsDb.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Cars ON");
+        //        RentalsDb.Cars.Add(value);
+        //        RentalsDb.SaveChanges();
+        //        RentalsDb.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Cars OFF");
+
+        //        return Ok(value);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return BadRequest(e);
+        //    }
+        //    finally
+        //    {
+        //        RentalsDb.Database.CloseConnection();
+        //    }
+        //}
+
+        // FIXME: async version not working - identetiy insert remains set to off
+        public async Task<IActionResult> Post([FromBody] Car value)
         {
+            await RentalsDb.Database.OpenConnectionAsync();
             try
             {
-                RentalsDb.Cars.Add(value);
-                RentalsDb.SaveChanges();
+                await RentalsDb.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT dbo.Cars ON");
+                await RentalsDb.Cars.AddAsync(value);
+                await RentalsDb.SaveChangesAsync();
+                await RentalsDb.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT dbo.Cars OFF");
 
                 return Ok(value);
             }
@@ -57,26 +84,48 @@ namespace CarRentalDB.Controllers
             {
                 return BadRequest(e);
             }
+            finally
+            {
+                await RentalsDb.Database.CloseConnectionAsync();
+            }
         }
 
         // PUT api/<CarsController>/5
         [HttpPut("{id}")]
-        [Authorize(Policy = "Manager")]
-        public void Put(int id, [FromBody] string value)
+        [Authorize(Roles = "Manager")]
+        public async Task<IActionResult> Put(int id, [FromBody] Car value)
         {
+            var existingCar = await RentalsDb.Cars.FirstOrDefaultAsync(c => c.ID == value.ID);
 
+            if (existingCar != null)
+            {
+                try
+                {
+                    RentalsDb.Entry(existingCar).CurrentValues.SetValues(value);
+                    await RentalsDb.SaveChangesAsync();
+
+                    return Ok(value);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e);
+                }
+            }
+            return NotFound();
         }
 
 
 
         // DELETE api/<CarsController>/5
         [HttpDelete("{id}")]
-        [Authorize(Policy = "Manager")]
-        public IActionResult Delete(int id)
+        [Authorize(Roles = "Manager")]
+        public async Task<IActionResult> Delete(int id)
         {
-            var carToDelete = RentalsDb.Cars.FirstOrDefault(c => c.ID == id);
+            var carToDelete = await RentalsDb.Cars.FirstOrDefaultAsync(c => c.ID == id);
             if (carToDelete != null)
             {
+                RentalsDb.Cars.Remove(carToDelete);
+                RentalsDb.SaveChanges();
                 return Ok(carToDelete);
             }
             return NotFound();

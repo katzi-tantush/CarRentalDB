@@ -4,3 +4,4 @@ at the moment its represented just fine
 - in login controller: is the long if statement for checking the username and password the right way of doing things?
 - what are the issuer and audince properties?
 - how to store images in db?
+- is my implementation of async in car ok?

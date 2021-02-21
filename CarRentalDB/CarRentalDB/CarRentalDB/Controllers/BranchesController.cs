@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CarRentalDB.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,36 +14,75 @@ namespace CarRentalDB.Controllers
     [ApiController]
     public class BranchesController : ControllerBase
     {
+        CarRentalDbContext RentalsDb;
+
+        public BranchesController()
+        {
+            RentalsDb = new CarRentalDbContext();
+        }
+
         // GET: api/<BranchesController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(RentalsDb.Branches);
         }
 
         // GET api/<BranchesController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult Get(int id)
         {
-            return "value";
+            IActionResult response = NotFound();
+
+            Branch branch = RentalsDb.Branches.FirstOrDefault(b => b.ID == id);
+
+            if (branch != null)
+            {
+                response = Ok(branch);
+            }
+
+            return response;
         }
 
         // POST api/<BranchesController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        [Authorize(Roles = "Manager")]
+        public IActionResult Post([FromBody] Branch value)
         {
+            try
+            {
+                RentalsDb.Branches.Add(value);
+                RentalsDb.SaveChanges();
+                return Ok(value);
+            }
+            catch (Exception e )
+            {
+                return BadRequest(e);
+            }
         }
 
         // PUT api/<BranchesController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [Authorize(Roles = "Manager")]
+        public IActionResult Put(int id, [FromBody] Branch value)
         {
-        }
+            Branch branch = RentalsDb.Branches.FirstOrDefault(b => b.ID == id);
 
-        // DELETE api/<BranchesController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            if (branch == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                RentalsDb.Entry(branch).CurrentValues.SetValues(value);
+                RentalsDb.SaveChanges();
+                return Ok(value);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
         }
     }
 }

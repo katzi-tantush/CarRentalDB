@@ -1,18 +1,24 @@
 ﻿- get authorization in carcategories to work [V]
 - catch unauthorized in all controllers
 - implement the images
-- add attribute validation to user id and car id 
-- look for other places that need model validation
-- entity framework transcation for removing a car (also removes the rented car)
-- entity frameworkd transaction for removing and adding rented car (changes the availableForRent bool of the car)
+(?) = optional
+(-) = need to think about it
+(x) = untested but implemented
+
+- add attribute validation to user id and car id [V]
+- look for other places that need model validation(-)
 - add cars (categories, images, etc) to db
+- rent operation(-)
+- return whole car view model(-)
+- make everything async
+- implement a check for existing user and car ids
 
 VALIDATORS:
 - user id[V]
-- car id
-- username
+- car id[V]
+- killometers(x)
+- username(?)
+- rentdate(-)
 
---------------------------------------------------------------------------------------
-AND MORE SPECIFICALLY
-a proper todolist (21.02.2021)
+
 

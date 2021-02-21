@@ -1,4 +1,5 @@
 ﻿using CarRentalDB.Helpers;
+using CarRentalDB.Utilities.Validators;
 using CarRentalDB.Validators;
 using System;
 using System.Collections.Generic;
@@ -12,8 +13,8 @@ namespace CarRentalDB.Models
     {
         [Key][DigitCount(8, "Car ID")]
         public int ID { get; set; }
+        [Min(0)]
         public int KillometerCount { get; set; }
-        public bool RentReady { get; set; }
         public bool AvailableForRent { get; set; }
 
         public int CarCategoryID { get; set; }
