@@ -199,3 +199,8 @@ D:\learning to code\jhon bryce\jb car rental project\backend\CarRentalDB\CarRent
 D:\learning to code\jhon bryce\jb car rental project\backend\CarRentalDB\CarRentalDB\CarRentalDB\obj\Debug\netcoreapp3.1\CarRentalDB.dll
 D:\learning to code\jhon bryce\jb car rental project\backend\CarRentalDB\CarRentalDB\CarRentalDB\obj\Debug\netcoreapp3.1\CarRentalDB.pdb
 D:\learning to code\jhon bryce\jb car rental project\backend\CarRentalDB\CarRentalDB\CarRentalDB\obj\Debug\netcoreapp3.1\CarRentalDB.genruntimeconfig.cache
+D:\learning to code\jhon bryce\jb car rental project\backend\CarRentalDB\CarRentalDB\CarRentalDB\bin\Debug\netcoreapp3.1\Microsoft.Win32.SystemEvents.dll
+D:\learning to code\jhon bryce\jb car rental project\backend\CarRentalDB\CarRentalDB\CarRentalDB\bin\Debug\netcoreapp3.1\System.Drawing.Common.dll
+D:\learning to code\jhon bryce\jb car rental project\backend\CarRentalDB\CarRentalDB\CarRentalDB\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
+D:\learning to code\jhon bryce\jb car rental project\backend\CarRentalDB\CarRentalDB\CarRentalDB\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
+D:\learning to code\jhon bryce\jb car rental project\backend\CarRentalDB\CarRentalDB\CarRentalDB\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll

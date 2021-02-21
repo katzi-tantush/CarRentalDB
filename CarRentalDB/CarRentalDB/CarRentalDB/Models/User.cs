@@ -1,4 +1,5 @@
 ﻿using CarRentalDB.Helpers;
+using CarRentalDB.Validators;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,7 +10,7 @@ namespace CarRentalDB.Models
 {
     public class User : IDataModel
     {
-        [Key]
+        [Key][DigitCount(9, "User ID")]
         public int ID { get; set; }
         public string Role { get; set; }
         public string FName { get; set; }

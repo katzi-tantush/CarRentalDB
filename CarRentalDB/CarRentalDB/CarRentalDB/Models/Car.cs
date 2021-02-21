@@ -1,4 +1,5 @@
 ﻿using CarRentalDB.Helpers;
+using CarRentalDB.Validators;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,7 +10,7 @@ namespace CarRentalDB.Models
 {
     public class Car : IDataModel
     {
-        [Key]
+        [Key][DigitCount(8, "Car ID")]
         public int ID { get; set; }
         public int KillometerCount { get; set; }
         public bool RentReady { get; set; }

@@ -32,8 +32,7 @@ namespace CarRentalDB.Controllers
 
         // GET: api/<UsersController>
         [HttpGet]
-        [Authorize(Roles = "Employee")]
-        [Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Employee, Manager")]
         public IActionResult Get()
         {
             return Ok(RentalsDb.Users);
@@ -41,8 +40,7 @@ namespace CarRentalDB.Controllers
 
         // GET api/<UsersController>/5
         [HttpGet("{id}")]
-        [Authorize(Roles = "Employee")]
-        [Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Employee, Manager")]
         public IActionResult Get(int id)
         {
             var user = RentalsDb.Users.FirstOrDefault(u => u.ID == id);
@@ -57,7 +55,7 @@ namespace CarRentalDB.Controllers
 
         // gets a username and password, returns the full user data if a matching user is found
         [HttpGet("registereduser")]
-        public IActionResult GetByUsernamePassword([FromBody] User registeredUser )
+        public IActionResult GetByUsernamePassword([FromBody] User registeredUser)
         {
             IActionResult response = NotFound();
 
@@ -77,15 +75,15 @@ namespace CarRentalDB.Controllers
         // POST api/<UsersController>
         // gets a new user, if the username does not exist in the db, adds the user to db
         [HttpPost]
-        [Authorize(Roles = "User")]
-        [Authorize(Roles = "Manager")]
         public IActionResult Post([FromBody] User newUser)
         {
+            IActionResult response;
+
             User existingUsername = RentalsDb.Users.FirstOrDefault(u => u.UserName == newUser.UserName);
 
             if (existingUsername != null)
             {
-                return BadRequest("this username allready exists in our database");
+                response = BadRequest("this username allready exists in our database");
             }
 
             RentalsDb.Database.OpenConnection();
@@ -151,8 +149,7 @@ namespace CarRentalDB.Controllers
         // PUT api/<UsersController>/5
         // get a user value and changing its corresponding user in the db to that user
         [HttpPut()]
-        [Authorize(Roles = "User")]
-        [Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager, User")]
         public IActionResult Put([FromBody] User changedUser)
         {
             IActionResult response = NotFound();
@@ -171,8 +168,7 @@ namespace CarRentalDB.Controllers
 
         // DELETE api/<UsersController>/5
         [HttpDelete("{id}")]
-        [Authorize(Roles = "User")]
-        [Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager, Manager")]
         public IActionResult Delete(int id)
         {
             var user = RentalsDb.Users.FirstOrDefault(u => u.ID == id);

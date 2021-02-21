@@ -3,3 +3,16 @@
 - implement the images
 - add attribute validation to user id and car id 
 - look for other places that need model validation
+- entity framework transcation for removing a car (also removes the rented car)
+- entity frameworkd transaction for removing and adding rented car (changes the availableForRent bool of the car)
+- add cars (categories, images, etc) to db
+
+VALIDATORS:
+- user id[V]
+- car id
+- username
+
+--------------------------------------------------------------------------------------
+AND MORE SPECIFICALLY
+a proper todolist (21.02.2021)
+

@@ -41,10 +41,9 @@ namespace CarRentalDB.Controllers
             return NotFound();
         }
 
-        // FIXME: car categories is not an int! cant parse the incoming object from the post
         // POST api/<CarsController>
         [HttpPost]
-        [Authorize(Policy = "Manager")]
+        [Authorize(Roles = "Manager")]
         public IActionResult Post([FromBody] Car value)
         {
             try
@@ -65,7 +64,10 @@ namespace CarRentalDB.Controllers
         [Authorize(Policy = "Manager")]
         public void Put(int id, [FromBody] string value)
         {
+
         }
+
+
 
         // DELETE api/<CarsController>/5
         [HttpDelete("{id}")]

@@ -12,6 +12,7 @@ namespace CarRentalDB.Models
         // TODO: implement the image db
         [Key]
         public int ID { get; set; }
+        public int CarCategoryID { get; set; }
         public byte[] File { get; set; }
     }
 }
