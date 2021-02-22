@@ -50,15 +50,22 @@ namespace CarRentalDB.Controllers
         [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Post([FromBody] Car value)
         {
+            IActionResult response;
             try
             {
-                DbExtensions.SaveToDb<Car>(RentalsDb, value);
-                return Ok(value);
+                await RentalsDb.Database.OpenConnectionAsync();
+                await RentalsDb.SaveToDbAsync<Car>("Cars", value);
+                response = Ok(value);
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                response = BadRequest(e);
             }
+            finally
+            {
+                RentalsDb.Database.CloseConnection();
+            }
+            return response;
         }
 
         // PUT api/<CarsController>/5
