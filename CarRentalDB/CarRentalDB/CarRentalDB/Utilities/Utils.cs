@@ -1,4 +1,5 @@
 ﻿using CarRentalDB.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,12 +14,14 @@ namespace CarRentalDB.Helpers
         public static int IDGen(IEnumerable<IDataModel> existingModels)
         {
             // TODO: implement overrides for UserID and CarID
-            int nextID = existingModels.Any() ? 
-                existingModels.Max(model => model.ID) + 1 
-                : 
+            int nextID = existingModels.Any() ?
+                existingModels.Max(model => model.ID) + 1
+                :
                 1;
 
             return nextID;
         }
+
+        
     }
 }

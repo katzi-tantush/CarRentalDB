@@ -24,3 +24,9 @@ carCategory:
     "DailyCost":11,
     "OverdueDailyCost":12    
 }
+
+car:
+
+{
+    "ID":1,
+}

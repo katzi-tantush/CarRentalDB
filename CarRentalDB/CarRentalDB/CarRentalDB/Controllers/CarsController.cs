@@ -1,4 +1,6 @@
-﻿using CarRentalDB.Models;
+﻿using CarRentalDB.Helpers;
+using CarRentalDB.Models;
+using CarRentalDB.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -43,50 +45,19 @@ namespace CarRentalDB.Controllers
         }
 
         // POST api/<CarsController>
+        // FIXME: is there any point in having async method with all awaits?
         [HttpPost]
         [Authorize(Roles = "Manager")]
-        //public IActionResult Post([FromBody] Car value)
-        //{
-        //    RentalsDb.Database.OpenConnection();
-        //    try
-        //    {
-        //        RentalsDb.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Cars ON");
-        //        RentalsDb.Cars.Add(value);
-        //        RentalsDb.SaveChanges();
-        //        RentalsDb.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Cars OFF");
-
-        //        return Ok(value);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return BadRequest(e);
-        //    }
-        //    finally
-        //    {
-        //        RentalsDb.Database.CloseConnection();
-        //    }
-        //}
-
-        // FIXME: async version not working - identetiy insert remains set to off
         public async Task<IActionResult> Post([FromBody] Car value)
         {
-            await RentalsDb.Database.OpenConnectionAsync();
             try
             {
-                await RentalsDb.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT dbo.Cars ON");
-                await RentalsDb.Cars.AddAsync(value);
-                await RentalsDb.SaveChangesAsync();
-                await RentalsDb.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT dbo.Cars OFF");
-
+                DbExtensions.SaveToDb<Car>(RentalsDb, value);
                 return Ok(value);
             }
             catch (Exception e)
             {
                 return BadRequest(e);
-            }
-            finally
-            {
-                await RentalsDb.Database.CloseConnectionAsync();
             }
         }
 
@@ -101,6 +72,9 @@ namespace CarRentalDB.Controllers
             {
                 try
                 {
+                    // TODO: this is untested
+                    // FIXME: is this a problem?
+
                     RentalsDb.Entry(existingCar).CurrentValues.SetValues(value);
                     await RentalsDb.SaveChangesAsync();
 

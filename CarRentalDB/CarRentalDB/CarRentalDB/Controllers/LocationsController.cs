@@ -1,5 +1,7 @@
 ﻿
+using CarRentalDB.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,18 +15,34 @@ namespace CarRentalDB.Controllers
     [ApiController]
     public class LocationsController : ControllerBase
     {
+        CarRentalDbContext RentalsDb;
+
+        public LocationsController()
+        {
+            RentalsDb = new CarRentalDbContext();
+        }
+
         // GET: api/<LocationsController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(RentalsDb.Locations);
         }
 
         // GET api/<LocationsController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task <IActionResult> Get(int id)
         {
-            return "value";
+            IActionResult response = NotFound();
+
+            var location = await RentalsDb.Locations.FirstOrDefaultAsync(l => l.ID == id);
+
+            if (location != null)
+            {
+                response = Ok(location);
+            }
+
+            return response;
         }
 
         // POST api/<LocationsController>

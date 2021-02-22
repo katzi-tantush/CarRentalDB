@@ -20,5 +20,5 @@ VALIDATORS:
 - username(?)
 - rentdate(-)
 
-
+-- IMPORTANT! go over problems log and decide what you'r going to ask
 
