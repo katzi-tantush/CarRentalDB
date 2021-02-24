@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace CarRentalDB.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class UserMessagesController : ControllerBase
     {
@@ -55,6 +55,8 @@ namespace CarRentalDB.Controllers
             UserMessage newMessage = value;
             newMessage.ID = Utils.IDGen(RentalsDb.UserMessages);
 
+            RentalsDb.Database.OpenConnection();
+            RentalsDb.Database.ExecuteSqlRawAsync($"SET IDENTITY_INSERT dbo.UserMessages ON");
             try
             {
                 RentalsDb.UserMessages.Add(newMessage);
@@ -64,6 +66,11 @@ namespace CarRentalDB.Controllers
             catch (Exception e)
             {
                 response = BadRequest(e);
+            }
+            finally
+            {
+                RentalsDb.Database.CloseConnection();
+                RentalsDb.Database.ExecuteSqlRawAsync($"SET IDENTITY_INSERT dbo.UserMessages OFF");
             }
             return response;
         }
@@ -89,8 +96,10 @@ namespace CarRentalDB.Controllers
 
         // DELETE api/<UserMessagesController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task <IActionResult> Delete(int id)
         {
+            IActionResult response = await RentalsDb.Delete<UserMessage>(id);
+            return response;
         }
     }
 }

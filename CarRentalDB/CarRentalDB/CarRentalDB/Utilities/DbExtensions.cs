@@ -30,7 +30,7 @@ namespace CarRentalDB.Utilities
         }
 
         // saves new values for a given IDataModel
-        public static async Task IDataModelUpdateDb<TEntity>(this CarRentalDbContext rentalsDb, IDataModel updatedModel) 
+        public static async Task IDataModelUpdateDb<TEntity>(this CarRentalDbContext rentalsDb, IDataModel updatedModel)
             where TEntity : class, IDataModel
         {
             TEntity oldModel = await rentalsDb.Set<TEntity>()
@@ -40,9 +40,41 @@ namespace CarRentalDB.Utilities
             rentalsDb.SaveChanges();
         }
 
-        //public static async Task<IActionResult> Delete()
+        // id matching id is found, deletes the model. else returns not found
+        //public static async Task<IActionResult> Delete<TEntity>(this CarRentalDbContext rentalsDb, int id)
+        //    where TEntity : class, IDataModel
         //{
-        //    IActionResult response =  
-        //} 
+        //    IActionResult response = new NotFoundResult();
+
+        //    TEntity foundModel = await rentalsDb.Set<TEntity>().FirstOrDefaultAsync(m => m.ID == id);
+
+        //    if (foundModel != null)
+        //    {
+        //        rentalsDb.Set<TEntity>().Remove(foundModel);
+        //        await rentalsDb.SaveChangesAsync();
+        //        response = new OkObjectResult(foundModel);
+        //    }
+
+        //    return response;
+        //}
+
+        // FIXME: trial delete
+        public static async Task<IActionResult> Delete<TEntity>(this CarRentalDbContext rentalsDb, int id)
+            where TEntity : class, IDataModel
+        {
+            DbSet<TEntity> set = rentalsDb.Set<TEntity>();
+            IActionResult response = new NotFoundResult();
+
+            TEntity foundModel = await set.FirstOrDefaultAsync(m => m.ID == id);
+
+            if (foundModel != null)
+            {
+                set.Remove(foundModel);
+                await rentalsDb.SaveChangesAsync();
+                response = new OkObjectResult(foundModel);
+            }
+
+            return response;
+        }
     }
 }
