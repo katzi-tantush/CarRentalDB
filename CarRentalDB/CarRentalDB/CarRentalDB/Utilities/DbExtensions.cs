@@ -30,46 +30,56 @@ namespace CarRentalDB.Utilities
         }
 
         // saves new values for a given IDataModel
-        public static async Task IDataModelUpdateDb<TEntity>(this CarRentalDbContext rentalsDb, IDataModel updatedModel)
+        //public static async Task Put<TEntity>(this CarRentalDbContext rentalsDb, IDataModel updatedModel)
+        //    where TEntity : class, IDataModel
+        //{
+        //    TEntity oldModel = await rentalsDb.Set<TEntity>()
+        //        .FirstOrDefaultAsync(m => m.ID == updatedModel.ID);
+
+        //    rentalsDb.Entry(oldModel).CurrentValues.SetValues(updatedModel);
+        //    rentalsDb.SaveChanges();
+        //}
+
+        // FIXME: put trial
+        public static async Task<IActionResult> Put<TEntity>
+            (this CarRentalDbContext rentalsDb, IDataModel updatedModel)
             where TEntity : class, IDataModel
         {
-            TEntity oldModel = await rentalsDb.Set<TEntity>()
-                .FirstOrDefaultAsync(m => m.ID == updatedModel.ID);
+            DbSet<TEntity> entitySet = rentalsDb.Set<TEntity>();
+            IActionResult response;
 
-            rentalsDb.Entry(oldModel).CurrentValues.SetValues(updatedModel);
-            rentalsDb.SaveChanges();
+            TEntity oldModel = await entitySet.FirstOrDefaultAsync(m => m.ID == updatedModel.ID);
+
+            if (oldModel==null)
+            {
+                return new NotFoundResult();
+            }
+
+            try
+            {
+                rentalsDb.Entry(oldModel).CurrentValues.SetValues(updatedModel);
+                await rentalsDb.SaveChangesAsync();
+                response = new OkObjectResult(updatedModel);
+            }
+            catch (Exception e)
+            {
+                response = new BadRequestObjectResult(e);
+            }
+            return response;
         }
 
         // id matching id is found, deletes the model. else returns not found
-        //public static async Task<IActionResult> Delete<TEntity>(this CarRentalDbContext rentalsDb, int id)
-        //    where TEntity : class, IDataModel
-        //{
-        //    IActionResult response = new NotFoundResult();
-
-        //    TEntity foundModel = await rentalsDb.Set<TEntity>().FirstOrDefaultAsync(m => m.ID == id);
-
-        //    if (foundModel != null)
-        //    {
-        //        rentalsDb.Set<TEntity>().Remove(foundModel);
-        //        await rentalsDb.SaveChangesAsync();
-        //        response = new OkObjectResult(foundModel);
-        //    }
-
-        //    return response;
-        //}
-
-        // FIXME: trial delete
         public static async Task<IActionResult> Delete<TEntity>(this CarRentalDbContext rentalsDb, int id)
             where TEntity : class, IDataModel
         {
-            DbSet<TEntity> set = rentalsDb.Set<TEntity>();
+            DbSet<TEntity> entitySet = rentalsDb.Set<TEntity>();
             IActionResult response = new NotFoundResult();
 
-            TEntity foundModel = await set.FirstOrDefaultAsync(m => m.ID == id);
+            TEntity foundModel = await entitySet.FirstOrDefaultAsync(m => m.ID == id);
 
             if (foundModel != null)
             {
-                set.Remove(foundModel);
+                entitySet.Remove(foundModel);
                 await rentalsDb.SaveChangesAsync();
                 response = new OkObjectResult(foundModel);
             }

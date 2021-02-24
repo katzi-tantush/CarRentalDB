@@ -77,20 +77,28 @@ namespace CarRentalDB.Controllers
 
         // PUT api/<UserMessagesController>/5
         [HttpPut("{id}")]
-        public async Task <IActionResult> Put(int id, [FromBody] UserMessage value)
+        //public async Task <IActionResult> Put(int id, [FromBody] UserMessage value)
+        //{
+        //    IActionResult response;
+
+        //    try
+        //    {
+        //        await RentalsDb.Put<UserMessage>(value);
+        //        response = Ok(value);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        response = BadRequest(e);
+        //    }
+
+        //    return response;
+        //}
+
+        // FIXME: trial put
+        public async Task<IActionResult> Put([FromBody] UserMessage value)
         {
-            IActionResult response;
-
-            try
-            {
-                await RentalsDb.IDataModelUpdateDb<UserMessage>(value);
-                response = Ok(value);
-            }
-            catch (Exception e)
-            {
-                response = BadRequest(e);
-            }
-
+            IActionResult response = await RentalsDb.Put<UserMessage>(value);
+            
             return response;
         }
 
