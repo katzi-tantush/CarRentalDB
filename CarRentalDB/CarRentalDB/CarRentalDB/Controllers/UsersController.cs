@@ -88,7 +88,7 @@ namespace CarRentalDB.Controllers
             try
             {
                 RentalsDb.Database.OpenConnection();
-                await RentalsDb.IdentityInsertAndUpdateDbAsync<User>("Users", newUser);
+                await RentalsDb.Post<User>("Users", newUser);
                 return Ok(newUser);
             }
             catch (Exception e)

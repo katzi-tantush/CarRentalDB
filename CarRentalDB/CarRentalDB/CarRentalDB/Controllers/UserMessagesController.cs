@@ -35,66 +35,21 @@ namespace CarRentalDB.Controllers
         [HttpGet("{id}")]
         public async Task  <IActionResult> Get(int id)
         {
-            IActionResult response = NotFound();
-            UserMessage Message = await RentalsDb.UserMessages.FirstOrDefaultAsync(m => m.ID == id);
-
-            if (Message!=null)
-            {
-                response = Ok(Message);
-            }
-            return response;
+            return RentalsDb.GetByID<UserMessage>(id);
         }
 
         // POST api/<UserMessagesController>
         // TODO: make this async?
         [HttpPost]
-        public IActionResult Post([FromBody] UserMessage value)
+        public async Task <IActionResult> Post([FromBody] UserMessage value)
         {
-            IActionResult response;
+            IActionResult response = await RentalsDb.PostIdGen<UserMessage>("UserMessages", value);
 
-            UserMessage newMessage = value;
-            newMessage.ID = Utils.IDGen(RentalsDb.UserMessages);
-
-            RentalsDb.Database.OpenConnection();
-            RentalsDb.Database.ExecuteSqlRawAsync($"SET IDENTITY_INSERT dbo.UserMessages ON");
-            try
-            {
-                RentalsDb.UserMessages.Add(newMessage);
-                RentalsDb.SaveChanges();
-                response = Ok(newMessage);
-            }
-            catch (Exception e)
-            {
-                response = BadRequest(e);
-            }
-            finally
-            {
-                RentalsDb.Database.CloseConnection();
-                RentalsDb.Database.ExecuteSqlRawAsync($"SET IDENTITY_INSERT dbo.UserMessages OFF");
-            }
             return response;
         }
 
         // PUT api/<UserMessagesController>/5
-        [HttpPut("{id}")]
-        //public async Task <IActionResult> Put(int id, [FromBody] UserMessage value)
-        //{
-        //    IActionResult response;
-
-        //    try
-        //    {
-        //        await RentalsDb.Put<UserMessage>(value);
-        //        response = Ok(value);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        response = BadRequest(e);
-        //    }
-
-        //    return response;
-        //}
-
-        // FIXME: trial put
+        [HttpPut]
         public async Task<IActionResult> Put([FromBody] UserMessage value)
         {
             IActionResult response = await RentalsDb.Put<UserMessage>(value);

@@ -54,7 +54,7 @@ namespace CarRentalDB.Controllers
             try
             {
                 await RentalsDb.Database.OpenConnectionAsync();
-                await RentalsDb.IdentityInsertAndUpdateDbAsync<Car>("Cars", value);
+                await RentalsDb.Post<Car>("Cars", value);
                 response = Ok(value);
             }
             catch (Exception e)
