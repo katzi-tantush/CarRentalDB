@@ -2,6 +2,7 @@
 using CarRentalDB.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,9 +28,9 @@ namespace CarRentalDB.Controllers
 
         // GET api/<CarCategoriesController>/5
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            var carcategory = RentalDB.CarCategories.FirstOrDefault(category => category.ID == id);
+            var carcategory = await RentalDB.CarCategories.FirstOrDefaultAsync(category => category.ID == id);
             if (carcategory == null)
             {
                 return NotFound();

@@ -54,7 +54,7 @@ namespace CarRentalDB.Controllers
             try
             {
                 await RentalsDb.Database.OpenConnectionAsync();
-                await RentalsDb.SaveToDbAsync<Car>("Cars", value);
+                await RentalsDb.IdentityInsertAndUpdateDbAsync<Car>("Cars", value);
                 response = Ok(value);
             }
             catch (Exception e)
@@ -69,9 +69,9 @@ namespace CarRentalDB.Controllers
         }
 
         // PUT api/<CarsController>/5
-        [HttpPut("{id}")]
+        [HttpPut]
         [Authorize(Roles = "Manager")]
-        public async Task<IActionResult> Put(int id, [FromBody] Car value)
+        public async Task<IActionResult> Put([FromBody] Car value)
         {
             var existingCar = await RentalsDb.Cars.FirstOrDefaultAsync(c => c.ID == value.ID);
 
@@ -79,9 +79,6 @@ namespace CarRentalDB.Controllers
             {
                 try
                 {
-                    // TODO: this is untested
-                    // FIXME: is this a problem?
-
                     RentalsDb.Entry(existingCar).CurrentValues.SetValues(value);
                     await RentalsDb.SaveChangesAsync();
 

@@ -21,7 +21,5 @@ namespace CarRentalDB.Helpers
 
             return nextID;
         }
-
-        
     }
 }

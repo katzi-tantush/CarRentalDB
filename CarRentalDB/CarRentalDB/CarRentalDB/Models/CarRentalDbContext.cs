@@ -25,6 +25,7 @@ namespace CarRentalDB.Models
         public virtual DbSet<Image> Images{ get; set; }
         public virtual DbSet<RentedCar> RentedCars{ get; set; }
         public virtual DbSet<User> Users{ get; set; }
+        public virtual DbSet<UserMessage> UserMessages{ get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

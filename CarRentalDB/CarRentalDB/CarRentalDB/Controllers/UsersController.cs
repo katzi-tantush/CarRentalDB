@@ -1,4 +1,5 @@
 ﻿using CarRentalDB.Models;
+using CarRentalDB.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -55,13 +56,13 @@ namespace CarRentalDB.Controllers
 
         // gets a username and password, returns the full user data if a matching user is found
         [HttpGet("registereduser")]
-        public IActionResult GetByUsernamePassword([FromBody] User registeredUser)
+        public async Task<IActionResult> GetByUsernamePassword([FromBody] User registeredUser)
         {
             IActionResult response = NotFound();
 
-            User userMatch = RentalsDb.Users
+            User userMatch = await RentalsDb.Users
                 .Where(u => u.UserName == registeredUser.UserName)
-                .FirstOrDefault(u => u.Password == registeredUser.Password);
+                .FirstOrDefaultAsync(u => u.Password == registeredUser.Password);
 
             if (userMatch != null)
             {
@@ -75,24 +76,19 @@ namespace CarRentalDB.Controllers
         // POST api/<UsersController>
         // gets a new user, if the username does not exist in the db, adds the user to db
         [HttpPost]
-        public IActionResult Post([FromBody] User newUser)
+        public async Task<IActionResult> Post([FromBody] User newUser)
         {
-            IActionResult response;
-
             User existingUsername = RentalsDb.Users.FirstOrDefault(u => u.UserName == newUser.UserName);
 
             if (existingUsername != null)
             {
-                response = BadRequest("this username allready exists in our database");
+                return BadRequest("this username allready exists in our database");
             }
 
-            RentalsDb.Database.OpenConnection();
             try
             {
-                RentalsDb.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Users ON");
-                RentalsDb.Users.Add(newUser);
-                RentalsDb.SaveChanges();
-                RentalsDb.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Users OFF");
+                RentalsDb.Database.OpenConnection();
+                await RentalsDb.IdentityInsertAndUpdateDbAsync<User>("Users", newUser);
                 return Ok(newUser);
             }
             catch (Exception e)
@@ -148,18 +144,18 @@ namespace CarRentalDB.Controllers
 
         // PUT api/<UsersController>/5
         // get a user value and changing its corresponding user in the db to that user
-        [HttpPut()]
+        [HttpPut]
         [Authorize(Roles = "Manager, User")]
-        public IActionResult Put([FromBody] User changedUser)
+        public async Task<IActionResult> Put([FromBody] User changedUser)
         {
             IActionResult response = NotFound();
 
-            User existingUser = RentalsDb.Users.FirstOrDefault(u => u.ID == changedUser.ID);
+            User existingUser = await RentalsDb.Users.FirstOrDefaultAsync(u => u.ID == changedUser.ID);
 
             if (existingUser != null)
             {
                 RentalsDb.Entry(existingUser).CurrentValues.SetValues(changedUser);
-                RentalsDb.SaveChanges();
+                await RentalsDb.SaveChangesAsync();
                 response = Ok(changedUser);
             }
 
@@ -169,14 +165,14 @@ namespace CarRentalDB.Controllers
         // DELETE api/<UsersController>/5
         [HttpDelete("{id}")]
         [Authorize(Roles = "Manager, Manager")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var user = RentalsDb.Users.FirstOrDefault(u => u.ID == id);
+            var user = await RentalsDb.Users.FirstOrDefaultAsync(u => u.ID == id);
 
             if (user != null)
             {
                 RentalsDb.Users.Remove(user);
-                RentalsDb.SaveChanges();
+                await RentalsDb.SaveChangesAsync();
 
                 return Ok(user);
             }
