@@ -36,12 +36,12 @@ namespace CarRentalDB.Utilities
 
         // TODO: update all id gens in the controllers
         // sets the IDataModel's ID: if the entity set is empty -> 1, else sets ID to the highest ID + 1
-        public async static Task IDGen<TEntity>(this CarRentalDbContext rentalsDb, TEntity model)
+        public static void IDGen<TEntity>(this CarRentalDbContext rentalsDb, TEntity model)
             where TEntity : class, IDataModel
         {
             DbSet<TEntity> dbSet = rentalsDb.Set<TEntity>();
-            model.ID = await dbSet.AnyAsync() ?
-                await dbSet.MaxAsync(m => m.ID) + 1
+            model.ID = dbSet.Any() ?
+                dbSet.Max(m => m.ID) + 1
                 :
                 1;
         }
@@ -49,7 +49,7 @@ namespace CarRentalDB.Utilities
         // saves to the db an object of type TEntity: handles the opening and closing of the connection, 
         // and setting the identity insert on and off
         // TODO: implemnt post in all controllers
-        public static async Task<IActionResult> Post<TEntity>
+        public static IActionResult Post<TEntity>
             (this CarRentalDbContext rentalsDb, string tableName, TEntity value)
             where TEntity : class
         {

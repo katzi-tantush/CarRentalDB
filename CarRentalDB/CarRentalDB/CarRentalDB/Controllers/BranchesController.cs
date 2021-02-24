@@ -1,4 +1,5 @@
 ﻿using CarRentalDB.Models;
+using CarRentalDB.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -29,60 +30,26 @@ namespace CarRentalDB.Controllers
         }
 
         // GET api/<BranchesController>/5
-        [HttpGet("{id}")]
+        [HttpGet]
         public IActionResult Get(int id)
         {
-            IActionResult response = NotFound();
-
-            Branch branch = RentalsDb.Branches.FirstOrDefault(b => b.ID == id);
-
-            if (branch != null)
-            {
-                response = Ok(branch);
-            }
-
-            return response;
+            return RentalsDb.GetByID<Branch>(id);
         }
 
         // POST api/<BranchesController>
         [HttpPost]
-        [Authorize(Roles = "Manager")]
-        public IActionResult Post([FromBody] Branch value)
+        //[Authorize(Roles = "Manager")]
+        public IActionResult Post([FromBody] Branch newBranch)
         {
-            try
-            {
-                RentalsDb.Branches.Add(value);
-                RentalsDb.SaveChanges();
-                return Ok(value);
-            }
-            catch (Exception e )
-            {
-                return BadRequest(e);
-            }
+            return RentalsDb.PostIdGen<Branch>("Branches", newBranch);
         }
 
         // PUT api/<BranchesController>/5
-        [HttpPut("{id}")]
-        [Authorize(Roles = "Manager")]
-        public IActionResult Put(int id, [FromBody] Branch value)
+        [HttpPut]
+        //[Authorize(Roles = "Manager")]
+        public IActionResult Put(int id, [FromBody] Branch modifiedBranch)
         {
-            Branch branch = RentalsDb.Branches.FirstOrDefault(b => b.ID == id);
-
-            if (branch == null)
-            {
-                return NotFound();
-            }
-
-            try
-            {
-                RentalsDb.Entry(branch).CurrentValues.SetValues(value);
-                RentalsDb.SaveChanges();
-                return Ok(value);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e);
-            }
+            return RentalsDb.Put<Branch>(modifiedBranch);
         }
     }
 }
