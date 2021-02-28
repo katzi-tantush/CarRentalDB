@@ -23,46 +23,34 @@ namespace CarRentalDB.Controllers
             RentalsDb = new CarRentalDbContext();
         }
 
-
-        // GET: api/<UserMessagesController>
         [HttpGet]
         public IActionResult Get()
         {
             return Ok(RentalsDb.UserMessages);
         }
 
-        // GET api/<UserMessagesController>/5
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            return RentalsDb.GetByID<UserMessage>(id);
+            return RentalsDb.GetResultByID<UserMessage>(id);
         }
 
-        // POST api/<UserMessagesController>
-        // TODO: make this async?
         [HttpPost]
-        public IActionResult Post([FromBody] UserMessage value)
+        public IActionResult Post([FromBody] UserMessage newUserMessage)
         {
-            IActionResult response = RentalsDb.PostIdGen<UserMessage>("UserMessages", value);
-
-            return response;
+            return RentalsDb.PostIdGen<UserMessage>("UserMessages", newUserMessage);
         }
 
-        // PUT api/<UserMessagesController>/5
         [HttpPut]
-        public IActionResult Put([FromBody] UserMessage value)
+        public IActionResult Put([FromBody] UserMessage modifiedUserMessage)
         {
-            IActionResult response = RentalsDb.Put<UserMessage>(value);
-            
-            return response;
+            return RentalsDb.Put<UserMessage>(modifiedUserMessage);
         }
 
-        // DELETE api/<UserMessagesController>/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            IActionResult response = RentalsDb.Delete<UserMessage>(id);
-            return response;
+            return RentalsDb.Delete<UserMessage>(id);
         }
     }
 }

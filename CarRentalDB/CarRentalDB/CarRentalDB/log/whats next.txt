@@ -1,26 +1,17 @@
-﻿- get authorization in carcategories to work [V]
-- catch unauthorized in all controllers
-- implement the images
+﻿- catch unauthorized in all controllers
 (?) = optional
 (-) = need to think about it
 (x) = untested but implemented
 
-- add attribute validation to user id and car id [V]
 - look for other places that need model validation(-)
 - add cars (categories, images, etc) to db
 - rent operation(-)
 - return whole car view model(-)
 - implement unauthorized results for relevant controller methods
 
-VALIDATORS:
-- user id[V]
-- car id[V]
-- killometers(x)
-- username(?)
-- rentdate(-)
+- test locations
+- add authorization to all needed controllers
 
 -- IMPORTANT! go over problems log and decide what you'r going to ask
 
 -- where I left off: 
-- finish implementing the rent car controller operation
-- return a full car model from controller

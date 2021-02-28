@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CarRentalDB.Models;
+using CarRentalDB.Utilities;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,40 +10,45 @@ using System.Threading.Tasks;
 
 namespace CarRentalDB.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class RentedCarsController : ControllerBase
     {
-        // GET: api/<RentedCarsController>
+        CarRentalDbContext RentalsDb;
+
+        public RentedCarsController()
+        {
+            RentalsDb = new CarRentalDbContext();
+        }
+
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(RentalsDb.RentedCars);
         }
 
-        // GET api/<RentedCarsController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult Get(int id)
         {
-            return "value";
+            return RentalsDb.GetResultByID<RentedCar>(id);
         }
 
-        // POST api/<RentedCarsController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromBody] RentedCar newRentData)
         {
+            return RentalsDb.Post<RentedCar>("RentedCars", newRentData);
         }
 
-        // PUT api/<RentedCarsController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut()]
+        public IActionResult Put([FromBody] RentedCar modifiedRentData)
         {
+            return RentalsDb.Put<RentedCar>(modifiedRentData);
         }
 
-        // DELETE api/<RentedCarsController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            return RentalsDb.Delete<RentedCar>(id);
         }
     }
 }

@@ -16,14 +16,18 @@ namespace CarRentalDB.Utilities
     // TODO: update documentation for class
     public static class DbExtensions
     {
-        // Creats a new CarRentalsDbContext and assigns it to the RentalsDb
-        public static void ReInitilize(this CarRentalDbContext RentalsDb)
+        // gets an IDataModel by id
+        public static IDataModel GetById<TEntity>(this CarRentalDbContext rentalsDb, int id)
+            where TEntity : class, IDataModel
         {
-            RentalsDb = new CarRentalDbContext();
+            DbSet<TEntity> dbSet = rentalsDb.Set<TEntity>();
+            IDataModel foundModel = dbSet.FirstOrDefault(m => m.ID == id);
+
+            return foundModel;
         }
 
         // returns either Ok() with a model by ID or NotFound() from a db set 
-        public static IActionResult GetByID<TEntity>(this CarRentalDbContext rentalsDb, int id)
+        public static IActionResult GetResultByID<TEntity>(this CarRentalDbContext rentalsDb, int id)
             where TEntity : class, IDataModel
         {
             DbSet<TEntity> dbSet = rentalsDb.Set<TEntity>();

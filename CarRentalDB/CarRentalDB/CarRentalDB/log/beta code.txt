@@ -1,1 +1,48 @@
-﻿
+﻿       ----------------------------------------------------------------------------------------------------------------------------------------------
+       - RENT IN SINGLE ACTION:
+
+       // FIXME: make this a transaction - im not happy with he transaction implementation in rentin either:
+        [HttpPut("RentOut/{id}")]
+        public IActionResult RentOut(int id, [FromBody] RentedCar rentData)
+        {
+            Car carToRent = RentalsDb.Cars.FirstOrDefault(c => c.ID == id);
+            List<IActionResult> actionResults = new List<IActionResult>();
+
+            if (carToRent.AvailableForRent)
+            {
+                try
+                {
+                    carToRent.AvailableForRent = false;
+                    actionResults.Add(RentalsDb.Put<Car>(carToRent));
+                    actionResults.Add(RentalsDb.Post<RentedCar>("RentedCars", rentData));
+                }
+                catch (Exception e)
+                {
+                    actionResults.Add(new BadRequestObjectResult(e));
+                }
+            }
+            else
+            {
+                actionResults.Add(new BadRequestObjectResult($"Car {carToRent.ID} is not available for rent"));
+            }
+
+            return Ok(actionResults);
+        }
+
+        // FIXME: if one is sccesful and the other isent - Ok is returned with an action that was not preformed!!!
+        [HttpPut("RentIn/{id}")]
+        public IActionResult RentIn(int id)
+        {
+            List<IActionResult> actionResults = new List<IActionResult>();
+            var returnedCar = RentalsDb.Cars.FirstOrDefault(c => c.ID == id);
+
+            using (var transaction = RentalsDb.Database.BeginTransaction())
+            {
+                returnedCar.AvailableForRent = true;
+                actionResults.Add(RentalsDb.Put<Car>(returnedCar));
+                actionResults.Add(RentalsDb.Delete<RentedCar>(id));
+            }
+
+            return Ok(actionResults);
+        }
+        ----------------------------------------------------------------------------------------------------------------------------------------------

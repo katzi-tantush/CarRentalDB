@@ -31,7 +31,7 @@ namespace CarRentalDB.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            return RentalDB.GetByID<CarCategory>(id);
+            return RentalDB.GetResultByID<CarCategory>(id);
         }
 
         // POST api/<CarCategoriesController>

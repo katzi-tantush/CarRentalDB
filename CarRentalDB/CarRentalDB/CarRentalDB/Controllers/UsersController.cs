@@ -31,7 +31,6 @@ namespace CarRentalDB.Controllers
             Config = c;
         }
 
-        // GET: api/<UsersController>
         [HttpGet]
         [Authorize(Roles = "Employee, Manager")]
         public IActionResult Get()
@@ -39,12 +38,11 @@ namespace CarRentalDB.Controllers
             return Ok(RentalsDb.Users);
         }
 
-        // GET api/<UsersController>/5
         [HttpGet("{id}")]
         [Authorize(Roles = "Employee, Manager")]
         public IActionResult Get(int id)
         {
-            return RentalsDb.GetByID<User>(id);
+            return RentalsDb.GetResultByID<User>(id);
         }
 
         // gets a username and password, returns the full user data if a matching user is found
@@ -65,7 +63,6 @@ namespace CarRentalDB.Controllers
             return response;
         }
 
-        // POST api/<UsersController>
         // gets a new user, if the username does not exist in the db, adds the user to db
         [HttpPost]
         public IActionResult Post([FromBody] User newUser)
@@ -114,8 +111,6 @@ namespace CarRentalDB.Controllers
             return response;
         }
 
-        // PUT api/<UsersController>/5
-        // get a user value and changing its corresponding user in the db to that user
         [HttpPut]
         [Authorize(Roles = "Manager, User")]
         public IActionResult Put([FromBody] User modifiedUser)
@@ -123,7 +118,6 @@ namespace CarRentalDB.Controllers
             return RentalsDb.Put<User>(modifiedUser);
         }
 
-        // DELETE api/<UsersController>/5
         [HttpDelete("{id}")]
         [Authorize(Roles = "Manager, Manager")]
         public IActionResult Delete(int id)

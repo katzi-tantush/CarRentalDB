@@ -1,4 +1,5 @@
-﻿using CarRentalDB.Models;
+﻿using CarRentalDB.FullModels;
+using CarRentalDB.Models;
 using CarRentalDB.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace CarRentalDB.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class BranchesController : ControllerBase
     {
@@ -22,21 +23,30 @@ namespace CarRentalDB.Controllers
             RentalsDb = new CarRentalDbContext();
         }
 
-        // GET: api/<BranchesController>
         [HttpGet]
         public IActionResult Get()
         {
             return Ok(RentalsDb.Branches);
         }
 
-        // GET api/<BranchesController>/5
-        [HttpGet]
+        [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            return RentalsDb.GetByID<Branch>(id);
+            return RentalsDb.GetResultByID<Branch>(id);
         }
 
-        // POST api/<BranchesController>
+        [HttpGet("Full/{id}")]
+        public IActionResult GetFull(int id)
+        {
+            IActionResult response = NotFound();
+            FullBranch branch = new FullBranch(RentalsDb, id);
+            if (branch != null)
+            {
+                response = Ok(branch);
+            }
+            return response;
+        }
+
         [HttpPost]
         //[Authorize(Roles = "Manager")]
         public IActionResult Post([FromBody] Branch newBranch)
@@ -44,7 +54,6 @@ namespace CarRentalDB.Controllers
             return RentalsDb.PostIdGen<Branch>("Branches", newBranch);
         }
 
-        // PUT api/<BranchesController>/5
         [HttpPut]
         //[Authorize(Roles = "Manager")]
         public IActionResult Put(int id, [FromBody] Branch modifiedBranch)

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CarRentalDB.Models;
+using CarRentalDB.Utilities;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,40 +10,42 @@ using System.Threading.Tasks;
 
 namespace CarRentalDB.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class LocationsController : ControllerBase
     {
-        // GET: api/<LocationsController>
+        CarRentalDbContext RentalsDb;
+
+        public LocationsController()
+        {
+            RentalsDb = new CarRentalDbContext();
+        }
+
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(RentalsDb.Locations);
         }
 
-        // GET api/<LocationsController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult Get(int id)
         {
-            return "value";
+            return RentalsDb.GetResultByID<Location>(id);
         }
 
-        // POST api/<LocationsController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        //[Authorize(Roles = "Manager")]
+        public IActionResult Post([FromBody] Location newLocation)
         {
+            return RentalsDb.PostIdGen<Location>("Locations", newLocation);
         }
 
-        // PUT api/<LocationsController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut]
+        //[Authorize(Roles = "Manager")]
+        public IActionResult Put(int id, [FromBody] Location modifiedLocation)
         {
+            return RentalsDb.Put<Location>(modifiedLocation);
         }
 
-        // DELETE api/<LocationsController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }
