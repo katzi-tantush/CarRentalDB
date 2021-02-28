@@ -33,7 +33,7 @@ namespace CarRentalDB.Controllers
 
         // GET api/<UserMessagesController>/5
         [HttpGet("{id}")]
-        public async Task  <IActionResult> Get(int id)
+        public IActionResult Get(int id)
         {
             return RentalsDb.GetByID<UserMessage>(id);
         }
@@ -41,27 +41,27 @@ namespace CarRentalDB.Controllers
         // POST api/<UserMessagesController>
         // TODO: make this async?
         [HttpPost]
-        public async Task <IActionResult> Post([FromBody] UserMessage value)
+        public IActionResult Post([FromBody] UserMessage value)
         {
-            IActionResult response = await RentalsDb.PostIdGen<UserMessage>("UserMessages", value);
+            IActionResult response = RentalsDb.PostIdGen<UserMessage>("UserMessages", value);
 
             return response;
         }
 
         // PUT api/<UserMessagesController>/5
         [HttpPut]
-        public async Task<IActionResult> Put([FromBody] UserMessage value)
+        public IActionResult Put([FromBody] UserMessage value)
         {
-            IActionResult response = await RentalsDb.Put<UserMessage>(value);
+            IActionResult response = RentalsDb.Put<UserMessage>(value);
             
             return response;
         }
 
         // DELETE api/<UserMessagesController>/5
         [HttpDelete("{id}")]
-        public async Task <IActionResult> Delete(int id)
+        public IActionResult Delete(int id)
         {
-            IActionResult response = await RentalsDb.Delete<UserMessage>(id);
+            IActionResult response = RentalsDb.Delete<UserMessage>(id);
             return response;
         }
     }

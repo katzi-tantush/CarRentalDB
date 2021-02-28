@@ -44,25 +44,18 @@ namespace CarRentalDB.Controllers
         [Authorize(Roles = "Employee, Manager")]
         public IActionResult Get(int id)
         {
-            var user = RentalsDb.Users.FirstOrDefault(u => u.ID == id);
-
-            if (user != null)
-            {
-                return Ok(user);
-            }
-
-            return NotFound();
+            return RentalsDb.GetByID<User>(id);
         }
 
         // gets a username and password, returns the full user data if a matching user is found
         [HttpGet("registereduser")]
-        public async Task<IActionResult> GetByUsernamePassword([FromBody] User registeredUser)
+        public IActionResult GetByUsernamePassword([FromBody] User registeredUser)
         {
             IActionResult response = NotFound();
 
-            User userMatch = await RentalsDb.Users
+            User userMatch = RentalsDb.Users
                 .Where(u => u.UserName == registeredUser.UserName)
-                .FirstOrDefaultAsync(u => u.Password == registeredUser.Password);
+                .FirstOrDefault(u => u.Password == registeredUser.Password);
 
             if (userMatch != null)
             {
@@ -72,33 +65,12 @@ namespace CarRentalDB.Controllers
             return response;
         }
 
-        // TODO: implement id check attribute in user model
         // POST api/<UsersController>
         // gets a new user, if the username does not exist in the db, adds the user to db
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] User newUser)
+        public IActionResult Post([FromBody] User newUser)
         {
-            User existingUsername = RentalsDb.Users.FirstOrDefault(u => u.UserName == newUser.UserName);
-
-            if (existingUsername != null)
-            {
-                return BadRequest("this username allready exists in our database");
-            }
-
-            try
-            {
-                RentalsDb.Database.OpenConnection();
-                await RentalsDb.Post<User>("Users", newUser);
-                return Ok(newUser);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e);
-            }
-            finally
-            {
-                RentalsDb.Database.CloseConnection();
-            }
+            return RentalsDb.Post<User>("Users", newUser);
         }
 
         // gets a user and returns token appropriate to "Role"
@@ -146,38 +118,17 @@ namespace CarRentalDB.Controllers
         // get a user value and changing its corresponding user in the db to that user
         [HttpPut]
         [Authorize(Roles = "Manager, User")]
-        public async Task<IActionResult> Put([FromBody] User changedUser)
+        public IActionResult Put([FromBody] User modifiedUser)
         {
-            IActionResult response = NotFound();
-
-            User existingUser = await RentalsDb.Users.FirstOrDefaultAsync(u => u.ID == changedUser.ID);
-
-            if (existingUser != null)
-            {
-                RentalsDb.Entry(existingUser).CurrentValues.SetValues(changedUser);
-                await RentalsDb.SaveChangesAsync();
-                response = Ok(changedUser);
-            }
-
-            return response;
+            return RentalsDb.Put<User>(modifiedUser);
         }
 
         // DELETE api/<UsersController>/5
         [HttpDelete("{id}")]
         [Authorize(Roles = "Manager, Manager")]
-        public async Task<IActionResult> Delete(int id)
+        public IActionResult Delete(int id)
         {
-            var user = await RentalsDb.Users.FirstOrDefaultAsync(u => u.ID == id);
-
-            if (user != null)
-            {
-                RentalsDb.Users.Remove(user);
-                await RentalsDb.SaveChangesAsync();
-
-                return Ok(user);
-            }
-
-            return NotFound();
+            return RentalsDb.Delete<User>(id);
         }
     }
 }

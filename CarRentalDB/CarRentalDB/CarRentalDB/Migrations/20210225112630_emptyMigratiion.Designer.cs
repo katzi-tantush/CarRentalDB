@@ -4,14 +4,16 @@ using CarRentalDB.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CarRentalDB.Migrations
 {
     [DbContext(typeof(CarRentalDbContext))]
-    partial class CarRentalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210225112630_emptyMigratiion")]
+    partial class emptyMigratiion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,6 +100,24 @@ namespace CarRentalDB.Migrations
                     b.ToTable("CarCategories");
                 });
 
+            modelBuilder.Entity("CarRentalDB.Models.Image", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CarCategoryID")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("File")
+                        .HasColumnType("varbinary(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Images");
+                });
+
             modelBuilder.Entity("CarRentalDB.Models.Location", b =>
                 {
                     b.Property<int>("ID")
@@ -118,7 +138,7 @@ namespace CarRentalDB.Migrations
 
             modelBuilder.Entity("CarRentalDB.Models.RentedCar", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("CarID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -135,7 +155,7 @@ namespace CarRentalDB.Migrations
                     b.Property<int>("UserID")
                         .HasColumnType("int");
 
-                    b.HasKey("ID");
+                    b.HasKey("CarID");
 
                     b.ToTable("RentedCars");
                 });

@@ -33,80 +33,80 @@ namespace CarRentalDB.Controllers
 
         // GET api/<CarsController>/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public IActionResult Get(int id)
         {
-            var car = await RentalsDb.Cars.FirstOrDefaultAsync(c => c.ID == id);
-
-            if (car != null)
-            {
-                return Ok(car);
-            }
-            return NotFound();
+            return RentalsDb.GetByID<Car>(id);
         }
 
         // POST api/<CarsController>
-        // FIXME: is there any point in having async method with all awaits?
         [HttpPost]
-        [Authorize(Roles = "Manager")]
-        public async Task<IActionResult> Post([FromBody] Car value)
+        //[Authorize(Roles = "Manager")]
+        public IActionResult Post([FromBody] Car newCar)
         {
-            IActionResult response;
-            try
-            {
-                await RentalsDb.Database.OpenConnectionAsync();
-                await RentalsDb.Post<Car>("Cars", value);
-                response = Ok(value);
-            }
-            catch (Exception e)
-            {
-                response = BadRequest(e);
-            }
-            finally
-            {
-                RentalsDb.Database.CloseConnection();
-            }
-            return response;
+            return RentalsDb.Post<Car>("Cars", newCar);
         }
 
         // PUT api/<CarsController>/5
         [HttpPut]
-        [Authorize(Roles = "Manager")]
-        public async Task<IActionResult> Put([FromBody] Car value)
+        //[Authorize(Roles = "Manager")]
+        public IActionResult Put([FromBody] Car updatedCar)
         {
-            var existingCar = await RentalsDb.Cars.FirstOrDefaultAsync(c => c.ID == value.ID);
-
-            if (existingCar != null)
-            {
-                try
-                {
-                    RentalsDb.Entry(existingCar).CurrentValues.SetValues(value);
-                    await RentalsDb.SaveChangesAsync();
-
-                    return Ok(value);
-                }
-                catch (Exception e)
-                {
-                    return BadRequest(e);
-                }
-            }
-            return NotFound();
+            return RentalsDb.Put<Car>(updatedCar);
         }
 
 
 
         // DELETE api/<CarsController>/5
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Manager")]
-        public async Task<IActionResult> Delete(int id)
+        //[Authorize(Roles = "Manager")]
+        public IActionResult Delete(int id)
         {
-            var carToDelete = await RentalsDb.Cars.FirstOrDefaultAsync(c => c.ID == id);
-            if (carToDelete != null)
+            return RentalsDb.Delete<Car>(id);
+        }
+
+        // FIXME: make this a transaction
+
+        [HttpPut("RentOut/{id}")]
+        public IActionResult RentOut(int id, [FromBody] RentedCar rentData)
+        {
+            Car carToRent = RentalsDb.Cars.FirstOrDefault(c => c.ID == id);
+            List<IActionResult> actionResults = new List<IActionResult>();
+
+            if (carToRent.AvailableForRent)
             {
-                RentalsDb.Cars.Remove(carToDelete);
-                RentalsDb.SaveChanges();
-                return Ok(carToDelete);
+                try
+                {
+                    carToRent.AvailableForRent = false;
+                    actionResults.Add(RentalsDb.Put<Car>(carToRent));
+                    actionResults.Add(RentalsDb.Post<RentedCar>("RentedCars", rentData));
+                }
+                catch (Exception e)
+                {
+                    actionResults.Add(new BadRequestObjectResult(e));
+                }
             }
-            return NotFound();
+            else
+            {
+                actionResults.Add(new BadRequestObjectResult($"Car {carToRent.ID} is not available for rent"));
+            }
+
+            return Ok(actionResults);
+        }
+
+        [HttpPut("RentIn/{id}")]
+        public IActionResult RentIn(int id)
+        {
+            List<IActionResult> actionResults = new List<IActionResult>();
+            var returnedCar = RentalsDb.Cars.FirstOrDefault(c => c.ID == id);
+
+            using (var transaction = RentalsDb.Database.BeginTransaction())
+            {
+                returnedCar.AvailableForRent = true;
+                actionResults.Add(RentalsDb.Put<Car>(returnedCar));
+                actionResults.Add(RentalsDb.Delete<RentedCar>(id));
+            }
+
+            return Ok(actionResults);
         }
     }
 }

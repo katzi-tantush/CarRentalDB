@@ -1,0 +1,31 @@
+﻿IMPORTANT:
+- how to return an unauthorized response? is this important at all?
+
+
+OPTIONAL:
+- I was ttrying to implement a transaction in th is function:
+--------------------------
+ [HttpPut("Rent")]
+        public IActionResult Rent([FromBody] Car carToRent)
+        {
+            List<object> resultList = new List<object>();
+            using (var transaction = new CarRentalDbContext().Database.BeginTransaction())
+            {
+                carToRent.AvailableForRent = false;
+                resultList.Add(RentalsDb.Put<Car>(carToRent));
+                var rentedCar = new RentedCar()
+                {
+                    ID = carToRent.ID,
+                    ContractStartDate = new DateTime(),
+                    CarReturnDate = null,
+                    ContractEndDate = null,
+                    UserID = 1
+                };
+                resultList.Add(RentalsDb.Post<RentedCar>("RentedCars", rentedCar));
+            }
+
+            return Ok(resultList);
+        }
+        ----------------------------
+the connection is being used in the add function (to set identity insert on and off).  
+the connection is then closed, meaning the original connection cannot be used..

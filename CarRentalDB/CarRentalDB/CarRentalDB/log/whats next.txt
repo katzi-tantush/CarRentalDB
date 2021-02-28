@@ -10,9 +10,6 @@
 - add cars (categories, images, etc) to db
 - rent operation(-)
 - return whole car view model(-)
-- make everything async
-- implement a check for existing user and car ids
-- make id gen in utils an extension method for dbsets
 - implement unauthorized results for relevant controller methods
 
 VALIDATORS:
@@ -24,3 +21,6 @@ VALIDATORS:
 
 -- IMPORTANT! go over problems log and decide what you'r going to ask
 
+-- where I left off: 
+- finish implementing the rent car controller operation
+- return a full car model from controller

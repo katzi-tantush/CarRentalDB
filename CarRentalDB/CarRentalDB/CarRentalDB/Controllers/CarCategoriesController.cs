@@ -1,5 +1,6 @@
 ﻿using CarRentalDB.Helpers;
 using CarRentalDB.Models;
+using CarRentalDB.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,60 +24,38 @@ namespace CarRentalDB.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-                return Ok(RentalDB.CarCategories);
+            return Ok(RentalDB.CarCategories);
         }
 
         // GET api/<CarCategoriesController>/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public IActionResult Get(int id)
         {
-            var carcategory = await RentalDB.CarCategories.FirstOrDefaultAsync(category => category.ID == id);
-            if (carcategory == null)
-            {
-                return NotFound();
-            }
-            return Ok(carcategory);
+            return RentalDB.GetByID<CarCategory>(id);
         }
 
         // POST api/<CarCategoriesController>
         [HttpPost]
-        [Authorize(Roles = "Manager")]
-        public IActionResult Post([FromBody] CarCategory value)
+        //[Authorize(Roles = "Manager")]
+        public IActionResult Post([FromBody] CarCategory newCarCategory)
         {
-            try
-            {
-                var category = value;
-                value.ID = Utils.IDGen(RentalDB.CarCategories);
-                RentalDB.CarCategories.Add(category);
-                RentalDB.SaveChanges();
-                return Ok(category);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e);
-            }
+            return RentalDB.Post<CarCategory>("CarCategories", newCarCategory);
         }
 
         // PUT api/<CarCategoriesController>/5
-        [HttpPut("{id}")]
-        [Authorize(Roles = "Manager")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut]
+        //[Authorize(Roles = "Manager")]
+        public IActionResult Put([FromBody] CarCategory modifiedCarCategory)
         {
+            return RentalDB.Put<CarCategory>(modifiedCarCategory);
         }
 
         // DELETE api/<CarCategoriesController>/5
-        [HttpDelete("{id}")]
+        //[HttpDelete("{id}")]
         [Authorize(Roles = "Manager")]
         public IActionResult Delete(int id)
         {
-            var carCategory = RentalDB.CarCategories.FirstOrDefault(category => category.ID == id);
-            if (carCategory == null)
-            {
-                return NotFound();
-            }
-            RentalDB.CarCategories.Remove(carCategory);
-            RentalDB.SaveChanges();
-            return Ok(carCategory);
+            return RentalDB.Delete<CarCategory>(id);
         }
     }
 }

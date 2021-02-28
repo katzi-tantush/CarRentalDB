@@ -22,8 +22,7 @@ namespace CarRentalDB.Models
         public virtual DbSet<Car> Cars { get; set; }
         public virtual DbSet<Branch> Branches { get; set; }
         public virtual DbSet<Location> Locations{ get; set; }
-        public virtual DbSet<Image> Images{ get; set; }
-        public virtual DbSet<RentedCar> RentedCars{ get; set; }
+        public virtual DbSet<RentedCar> RentedCars { get; set; }
         public virtual DbSet<User> Users{ get; set; }
         public virtual DbSet<UserMessage> UserMessages{ get; set; }
 
@@ -35,7 +34,6 @@ namespace CarRentalDB.Models
                     .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
                     .AddJsonFile("appsettings.json")
                     .Build();
-                //optionsBuilder.UseSqlServer("Data Source=DESKTOP-ERBRHMC\\SQLEXPRESS;Initial Catalog=CarRentalDb;Integrated Security=True");
                 optionsBuilder.UseSqlServer(configuration.GetConnectionString("CarRentalsConStr"));
             }
         }
@@ -43,14 +41,6 @@ namespace CarRentalDB.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "Hebrew_CI_AS");
-
-            // FIXME: not sure if I should ommit this
-            //modelBuilder.Entity<CarCategory>(entity =>
-            //{
-            //    entity.Property(e => e.Id)
-            //        .ValueGeneratedNever()
-            //        .HasColumnName("ID");
-            //});
 
             OnModelCreatingPartial(modelBuilder);
         }

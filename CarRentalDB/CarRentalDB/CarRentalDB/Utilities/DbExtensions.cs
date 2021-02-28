@@ -16,7 +16,12 @@ namespace CarRentalDB.Utilities
     // TODO: update documentation for class
     public static class DbExtensions
     {
-        // TODO: implement in all controllers
+        // Creats a new CarRentalsDbContext and assigns it to the RentalsDb
+        public static void ReInitilize(this CarRentalDbContext RentalsDb)
+        {
+            RentalsDb = new CarRentalDbContext();
+        }
+
         // returns either Ok() with a model by ID or NotFound() from a db set 
         public static IActionResult GetByID<TEntity>(this CarRentalDbContext rentalsDb, int id)
             where TEntity : class, IDataModel
@@ -34,7 +39,6 @@ namespace CarRentalDB.Utilities
             return response;
         }
 
-        // TODO: update all id gens in the controllers
         // sets the IDataModel's ID: if the entity set is empty -> 1, else sets ID to the highest ID + 1
         public static void IDGen<TEntity>(this CarRentalDbContext rentalsDb, TEntity model)
             where TEntity : class, IDataModel
@@ -47,8 +51,8 @@ namespace CarRentalDB.Utilities
         }
 
         // saves to the db an object of type TEntity: handles the opening and closing of the connection, 
-        // and setting the identity insert on and off
-        // TODO: implemnt post in all controllers
+        // and setting the identity insert on and off.
+        // used for User, Car, and RentedCar
         public static IActionResult Post<TEntity>
             (this CarRentalDbContext rentalsDb, string tableName, TEntity value)
             where TEntity : class
@@ -59,10 +63,10 @@ namespace CarRentalDB.Utilities
             {
                 using (var connection = rentalsDb.Database.GetDbConnection())
                 {
-                    await connection.OpenAsync();
+                    connection.Open();
 
-                    await rentalsDb.Database.ExecuteSqlRawAsync($"SET IDENTITY_INSERT dbo.{tableName} ON");
-                    await rentalsDb.Set<TEntity>().AddAsync(value);
+                     rentalsDb.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT dbo.{tableName} ON");
+                     rentalsDb.Set<TEntity>().Add(value);
                     rentalsDb.SaveChanges();
                     rentalsDb.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT dbo.{tableName} OFF");
 
@@ -78,33 +82,33 @@ namespace CarRentalDB.Utilities
         }
 
         // increments or generates an ID for the IDataModel, handles the identity insert
-        public static async Task<IActionResult> PostIdGen<TEntity>
+        // used for models that dont use Post db extension method
+        public static IActionResult PostIdGen<TEntity>
             (this CarRentalDbContext rentalsDb, string tableName, TEntity value)
             where TEntity : class, IDataModel
         {
-            await rentalsDb.IDGen<TEntity>(value);
+            rentalsDb.IDGen<TEntity>(value);
 
-            IActionResult response = await rentalsDb.Post<TEntity>(tableName, value);
+            IActionResult response = rentalsDb.Post<TEntity>(tableName, value);
             return response;
         }
 
         // Saves new values for a given IDataModel. Returns NotFound, Ok, Bad Request apropriatly
-        // TODO: implement put in all controllers
-        public static async Task<IActionResult> Put<TEntity>
+        public static IActionResult Put<TEntity>
             (this CarRentalDbContext rentalsDb, IDataModel updatedModel)
             where TEntity : class, IDataModel
         {
             DbSet<TEntity> entitySet = rentalsDb.Set<TEntity>();
             IActionResult response = new NotFoundResult();
 
-            TEntity oldModel = await entitySet.FirstOrDefaultAsync(m => m.ID == updatedModel.ID);
+            TEntity oldModel = entitySet.FirstOrDefault(m => m.ID == updatedModel.ID);
 
             if (oldModel != null)
             {
                 try
                 {
                     rentalsDb.Entry(oldModel).CurrentValues.SetValues(updatedModel);
-                    await rentalsDb.SaveChangesAsync();
+                    rentalsDb.SaveChanges();
                     response = new OkObjectResult(updatedModel);
                 }
                 catch (Exception e)
@@ -116,21 +120,20 @@ namespace CarRentalDB.Utilities
             return response;
         }
 
-        // id matching id is found, deletes the model. else returns not found
-        // TODO: implemnt delete in all controllers
-        public static async Task<IActionResult> Delete<TEntity>
+        // If matching id is found, deletes the model. else returns not found
+        public static IActionResult Delete<TEntity>
             (this CarRentalDbContext rentalsDb, int id)
             where TEntity : class, IDataModel
         {
             DbSet<TEntity> entitySet = rentalsDb.Set<TEntity>();
             IActionResult response = new NotFoundResult();
 
-            TEntity foundModel = await entitySet.FirstOrDefaultAsync(m => m.ID == id);
+            TEntity foundModel = entitySet.FirstOrDefault(m => m.ID == id);
 
             if (foundModel != null)
             {
                 entitySet.Remove(foundModel);
-                await rentalsDb.SaveChangesAsync();
+                rentalsDb.SaveChanges();
                 response = new OkObjectResult(foundModel);
             }
 
